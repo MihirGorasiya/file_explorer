@@ -1,24 +1,34 @@
-//ignore_for_file: prefer_const_literals_to_create_immutables
+//ignore_for_file: prefer_const_literals_to_create_immutables, use_build_context_synchronously
 import 'dart:io';
 
+import 'package:file_manager/statecontrol/controller.dart';
 import 'package:flutter/material.dart';
-import 'package:open_file/open_file.dart';
+import 'package:get/get.dart';
 import 'package:permission_handler/permission_handler.dart';
+
+import '../widgets/explorer/w_file_list_view.dart';
+import '../widgets/explorer/w_file_not_found_icon.dart';
+import '../widgets/explorer/w_pop_up_menu.dart';
 
 class ExplorerPage extends StatefulWidget {
   const ExplorerPage({
     Key? key,
     required this.dirPath,
+    required this.isSelecting,
   }) : super(key: key);
   final String dirPath;
+  final bool isSelecting;
   @override
   State<ExplorerPage> createState() => _ExplorerPageState();
 }
 
 class _ExplorerPageState extends State<ExplorerPage> {
+  final Controller c = Get.find();
   List<String> childDirList = [];
   List<String> childfileList = [];
   String currentDir = "Folder Name";
+  final TextEditingController textController = TextEditingController();
+  String createFolderError = '';
 
   void requestPermission() async {
     var status = await Permission.manageExternalStorage.status;
@@ -29,13 +39,12 @@ class _ExplorerPageState extends State<ExplorerPage> {
   }
 
   void getChildDirList() async {
+    childDirList.clear();
+    c.statusString.value = 'Searching For Files';
     List<String> tempList;
 
-    tempList = await Directory(widget.dirPath)
-        .list()
-        .map((e) => e.path)
-        .where((element) => !element.startsWith('.'))
-        .toList();
+    tempList =
+        await Directory(widget.dirPath).list().map((e) => e.path).toList();
 
     for (int i = 0; i < tempList.length; i++) {
       if (tempList[i].split('/').last.startsWith('.')) {
@@ -53,7 +62,6 @@ class _ExplorerPageState extends State<ExplorerPage> {
       } else {
         if (File(tempList[i]).existsSync()) {
           childfileList.add(tempList[i]);
-          tempList.removeAt(i);
         } else if (Directory(tempList[i]).existsSync()) {
           childDirList.add(tempList[i]);
         }
@@ -64,18 +72,57 @@ class _ExplorerPageState extends State<ExplorerPage> {
       childDirList.add(childfileList[i]);
     }
     setState(() {});
+    c.statusString.value = 'No File Found !';
   }
 
   void setCurrentDirName() {
     currentDir =
         widget.dirPath.split('/')[widget.dirPath.split('/').length - 1];
-    print(currentDir);
+
     if (currentDir == "0") {
       currentDir = "Internal Storage";
     } else if (currentDir == "453E-10F7") {
       currentDir = "SD Card";
     }
     setState(() {});
+  }
+
+  void onFolderCreate() async {
+    var folderName = textController.text;
+    if (folderName.isEmpty) {
+      c.createErrorMessage.value = 'Enter Folder Name!';
+    } else if (Directory('${widget.dirPath}/$folderName').existsSync()) {
+      c.createErrorMessage.value = 'Folder Already exists!';
+    } else {
+      await Directory('${widget.dirPath}/$folderName').create();
+      getChildDirList();
+      Navigator.pop(context);
+    }
+  }
+
+  void onDeletePressed() async {
+    int selectedItemCount = c.selectedItem.length;
+
+    if (selectedItemCount == 0) {
+      return;
+    }
+
+    for (int i = 0; i < selectedItemCount; i++) {
+      if (File(c.selectedItem[i]).existsSync()) {
+        File(c.selectedItem[i]).deleteSync();
+      }
+      if (Directory(c.selectedItem[i]).existsSync()) {
+        Directory(c.selectedItem[i]).deleteSync(recursive: true);
+      }
+    }
+    Navigator.pop(context);
+    Navigator.pop(context);
+    Navigator.pop(context);
+    c.goToPage(
+      context,
+      ExplorerPage(dirPath: widget.dirPath, isSelecting: false),
+    );
+    // getChildDirList();
   }
 
   @override
@@ -91,130 +138,53 @@ class _ExplorerPageState extends State<ExplorerPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(currentDir),
+        actions: [
+          SizedBox(
+            child: widget.isSelecting
+                ? CircleAvatar(
+                    backgroundColor: Colors.black38,
+                    foregroundColor: Colors.amber,
+                    child: Obx(
+                      () => Text(
+                        c.selectedItem.length.toString(),
+                        style: const TextStyle(fontSize: 20),
+                      ),
+                    ),
+                  )
+                : null,
+          ),
+          PopUpMenu(
+            isSelecting: widget.isSelecting,
+            textController: textController,
+            errorMsg: createFolderError,
+            onCreatePressed: onFolderCreate,
+            onDeletePressed: onDeletePressed,
+          ),
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 12.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(widget.dirPath),
+            SizedBox(
+              height: 23,
+              child: SingleChildScrollView(
+                reverse: true,
+                scrollDirection: Axis.horizontal,
+                child: Text(
+                  widget.dirPath,
+                ),
+              ),
+            ),
             Expanded(
               child: childDirList.isNotEmpty
-                  ? ListView.builder(
-                      itemCount: childDirList.length,
-                      itemBuilder: (context, index) {
-                        return Container(
-                          margin: const EdgeInsets.only(top: 10),
-                          padding: const EdgeInsets.symmetric(vertical: 5),
-                          // color: Colors.grey[800],
-                          child: InkWell(
-                            onTap: () {
-                              // String newPath = childDirList[index];
-                              if (Directory(childDirList[index]).existsSync()) {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => ExplorerPage(
-                                      dirPath: childDirList[index],
-                                    ),
-                                  ),
-                                );
-                              } else {
-                                OpenFile.open(childDirList[index]);
-                              }
-                            },
-                            child: Row(
-                              children: [
-                                Container(
-                                  padding: const EdgeInsets.all(7),
-                                  decoration: BoxDecoration(
-                                    color: Colors.amber,
-                                    borderRadius: BorderRadius.circular(15),
-                                  ),
-                                  child: LayoutBuilder(
-                                      builder: (context, constraints) {
-                                    if (childDirList[index].endsWith('.mp4')) {
-                                      return Icon(
-                                        Icons.video_file,
-                                        size: 35,
-                                        color: Colors.grey[900],
-                                      );
-                                    } else if (childDirList[index]
-                                        .endsWith('.mp3')) {
-                                      return Icon(
-                                        Icons.audio_file,
-                                        size: 35,
-                                        color: Colors.grey[900],
-                                      );
-                                    } else if (childDirList[index]
-                                            .endsWith('.jpg') ||
-                                        childDirList[index].endsWith('.jpeg') ||
-                                        childDirList[index].endsWith('.png')) {
-                                      return Icon(
-                                        Icons.image,
-                                        size: 35,
-                                        color: Colors.grey[900],
-                                      );
-                                    } else if (childDirList[index]
-                                        .contains('.')) {
-                                      if (!Directory(childDirList[index])
-                                          .existsSync()) {
-                                        return Icon(
-                                          Icons.file_present,
-                                          size: 35,
-                                          color: Colors.grey[900],
-                                        );
-                                      } else {
-                                        return Icon(
-                                          Icons.folder,
-                                          size: 35,
-                                          color: Colors.grey[900],
-                                        );
-                                      }
-                                    } else {
-                                      return Icon(
-                                        Icons.folder,
-                                        size: 35,
-                                        color: Colors.grey[900],
-                                      );
-                                    }
-                                  }),
-                                ),
-                                const SizedBox(width: 10),
-                                SizedBox(
-                                  height: 45,
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.80,
-                                  child: Text(
-                                    childDirList[index].split('/').last,
-                                    style: const TextStyle(fontSize: 15),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        );
-                      },
+                  ? FileListView(
+                      curDirPath: widget.dirPath,
+                      childDirList: childDirList,
+                      isSelecting: widget.isSelecting,
                     )
-                  : Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const Icon(
-                            Icons.warning_rounded,
-                            size: 70,
-                            color: Colors.amber,
-                          ),
-                          const Text(
-                            "No File Found !",
-                            style: TextStyle(
-                              fontSize: 17,
-                              fontWeight: FontWeight.w100,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
+                  : const FileNotFoundIcon(),
             )
           ],
         ),
