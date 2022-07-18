@@ -13,12 +13,14 @@ class PopUpMenu extends StatelessWidget {
     required this.errorMsg,
     required this.isSelecting,
     required this.onDeletePressed,
+    required this.onRenamePressed,
   }) : super(key: key);
 
   final TextEditingController textController;
   final String errorMsg;
   final bool isSelecting;
   final VoidCallback onCreatePressed;
+  final VoidCallback onRenamePressed;
   final VoidCallback onDeletePressed;
 
   @override
@@ -33,12 +35,14 @@ class PopUpMenu extends StatelessWidget {
       onSelected: (item) {
         switch (item) {
           case 0:
+            // New Folder
             c.createErrorMessage.value = '';
             textController.text = 'New Folder';
             showDialog(
               context: context,
               builder: (context) => Obx(
                 () => MyAlertDialog(
+                  titleText: 'Create new folder',
                   textController: textController,
                   c: c,
                   actionText: "Create",
@@ -69,6 +73,7 @@ class PopUpMenu extends StatelessWidget {
             );
             break;
           case 1:
+            // copy
             c.isTransfering.value = true;
             Navigator.pop(context);
             c.goToPage(
@@ -79,17 +84,86 @@ class PopUpMenu extends StatelessWidget {
           // case 2:
           //   // TODO: Add Move code Here
           //   break;
+
           case 3:
-            // onDeletePressed;
+            // Rename
+            showDialog(
+              context: context,
+              builder: (context) => Obx(
+                () => MyAlertDialog(
+                  titleText: "Rename",
+                  textController: textController,
+                  c: c,
+                  actionText: "Create",
+                  actionCallBack: onRenamePressed,
+                  onCancelPressed: () => onCancelPressed(),
+                  content: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      TextField(
+                        autofocus: true,
+                        decoration: const InputDecoration(
+                          hintText: "Enter Folder Name",
+                        ),
+                        controller: textController,
+                      ),
+                      SizedBox(
+                        height: 25,
+                        child: Text(
+                          c.createErrorMessage.value,
+                          style: const TextStyle(color: Colors.red),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            );
+            break;
+          case 4:
+            // Delete
             showDialog(
               context: context,
               builder: (context) => MyAlertDialog(
+                titleText: 'Delete',
                 textController: textController,
                 c: c,
                 actionText: "Delete",
                 actionCallBack: onDeletePressed,
                 onCancelPressed: () => onCancelPressed(),
                 content: const Text("Are you sure to delete selected Item?"),
+              ),
+            );
+            break;
+          case 5:
+            // Details
+            showDialog(
+              context: context,
+              builder: (context) => MyAlertDialog(
+                titleText: 'Details',
+                textController: textController,
+                c: c,
+                actionText: "Ok",
+                actionCallBack: () {
+                  onCancelPressed();
+                  onCancelPressed();
+                },
+                onCancelPressed: () {
+                  onCancelPressed();
+                  onCancelPressed();
+                },
+                content: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const SizedBox(height: 20),
+                    const Text("Size"),
+                    Text(
+                        '${c.sizeDetails.value.toString().substring(0, 5)} GB'),
+                    const SizedBox(height: 20),
+                  ],
+                ),
               ),
             );
             break;
@@ -148,15 +222,25 @@ class PopUpMenu extends StatelessWidget {
           ? <PopupMenuEntry>[
               const PopupMenuItem(
                 value: 1,
-                child: Text('Copy'),
+                child: Text('Copy (File Only)'),
               ),
               // const PopupMenuItem(
               //   value: 2,
               //   child: Text('Move'),
               // ),
-              const PopupMenuItem(
+              PopupMenuItem(
                 value: 3,
+                enabled: c.selectedItem.length == 1,
+                child: const Text('Rename'),
+              ),
+              const PopupMenuItem(
+                value: 4,
                 child: Text('Delete'),
+              ),
+              PopupMenuItem(
+                value: 5,
+                child: const Text('Details'),
+                onTap: () => c.getSizeDetails(),
               ),
             ]
           : <PopupMenuEntry>[
@@ -178,6 +262,7 @@ class MyAlertDialog extends StatelessWidget {
     required this.onCancelPressed,
     required this.content,
     required this.actionText,
+    required this.titleText,
   }) : super(key: key);
 
   final TextEditingController textController;
@@ -186,12 +271,13 @@ class MyAlertDialog extends StatelessWidget {
   final VoidCallback actionCallBack;
   final VoidCallback onCancelPressed;
   final String actionText;
+  final String titleText;
 
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
       contentPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 0),
-      title: const Text("Create new folder"),
+      title: Text(titleText),
       content: content,
       actions: [
         PlainTextButton(

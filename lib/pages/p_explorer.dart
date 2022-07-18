@@ -1,5 +1,6 @@
 //ignore_for_file: prefer_const_literals_to_create_immutables, use_build_context_synchronously
 import 'dart:io';
+import 'dart:math';
 
 import 'package:file_manager/statecontrol/controller.dart';
 import 'package:flutter/material.dart';
@@ -60,9 +61,9 @@ class _ExplorerPageState extends State<ExplorerPage> {
       if (tempList[i].split('/').last.startsWith('.')) {
         tempList.removeAt(i);
       } else {
-        if (File(tempList[i]).existsSync()) {
+        if (c.isFile(tempList[i])) {
           childfileList.add(tempList[i]);
-        } else if (Directory(tempList[i]).existsSync()) {
+        } else {
           childDirList.add(tempList[i]);
         }
       }
@@ -108,10 +109,9 @@ class _ExplorerPageState extends State<ExplorerPage> {
     }
 
     for (int i = 0; i < selectedItemCount; i++) {
-      if (File(c.selectedItem[i]).existsSync()) {
+      if (c.isFile(c.selectedItem[i])) {
         File(c.selectedItem[i]).deleteSync();
-      }
-      if (Directory(c.selectedItem[i]).existsSync()) {
+      } else {
         Directory(c.selectedItem[i]).deleteSync(recursive: true);
       }
     }
@@ -123,6 +123,26 @@ class _ExplorerPageState extends State<ExplorerPage> {
       ExplorerPage(dirPath: widget.dirPath, isSelecting: false),
     );
     // getChildDirList();
+  }
+
+  void onRenamePressed() async {
+    var newName = textController.text;
+
+    if (c.isFile(c.selectedItem[0])) {
+      var parentPath = File(c.selectedItem[0]).parent.path;
+      var fileExtention = c.selectedItem[0].split('.').last;
+      File(c.selectedItem[0]).rename('$parentPath/$newName.$fileExtention');
+    } else {
+      var parentPath = Directory(c.selectedItem[0]).parent.path;
+      Directory(c.selectedItem[0]).rename('$parentPath/$newName');
+    }
+    Navigator.pop(context);
+    Navigator.pop(context);
+    Navigator.pop(context);
+    c.goToPage(
+      context,
+      ExplorerPage(dirPath: widget.dirPath, isSelecting: false),
+    );
   }
 
   @override
@@ -158,6 +178,7 @@ class _ExplorerPageState extends State<ExplorerPage> {
             textController: textController,
             errorMsg: createFolderError,
             onCreatePressed: onFolderCreate,
+            onRenamePressed: onRenamePressed,
             onDeletePressed: onDeletePressed,
           ),
         ],
