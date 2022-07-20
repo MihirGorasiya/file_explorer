@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'package:easy_splash_screen/easy_splash_screen.dart';
 import 'package:file_manager/pages/p_home.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -29,7 +30,28 @@ class MyApp extends StatelessWidget {
           elevation: 0,
         ),
       ),
-      home: const HomePage(),
+      home: EasySplashScreen(
+        logo: Image(image: AssetImage('assets/file_explorer_logo.png')),
+        title: Text(
+          'File Manager',
+          style: TextStyle(
+            fontSize: 25,
+            fontWeight: FontWeight.bold,
+            color: Colors.amber,
+          ),
+        ),
+        showLoader: false,
+        loadingText: Text(
+          'Beta Version',
+          style: TextStyle(
+            fontSize: 15,
+            color: Colors.amber,
+            fontWeight: FontWeight.w100,
+          ),
+        ),
+        backgroundColor: Colors.grey.shade800,
+        navigator: const HomePage(),
+      ),
     );
   }
 }

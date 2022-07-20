@@ -1,6 +1,5 @@
 //ignore_for_file: prefer_const_literals_to_create_immutables, use_build_context_synchronously
 import 'dart:io';
-import 'dart:math';
 
 import 'package:file_manager/statecontrol/controller.dart';
 import 'package:flutter/material.dart';

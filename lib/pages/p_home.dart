@@ -5,6 +5,8 @@ import 'dart:io';
 import 'package:disk_space/disk_space.dart';
 import 'package:file_manager/pages/p_explorer.dart';
 import 'package:file_manager/pages/p_filtered_explorer.dart';
+import 'package:file_manager/pages/p_search.dart';
+import 'package:file_manager/pages/p_setting.dart';
 import 'package:file_manager/widgets/w_storage_info_banner.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -67,12 +69,16 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         actions: [
           IconButton(
-            onPressed: () {},
+            onPressed: () {
+              c.goToPage(context, SearchPage());
+            },
             icon: Icon(CupertinoIcons.search),
           ),
           IconButton(
-            onPressed: () {},
-            icon: Icon(Icons.more_vert),
+            onPressed: () {
+              c.goToPage(context, SettingPage());
+            },
+            icon: Icon(CupertinoIcons.settings),
           ),
         ],
       ),
