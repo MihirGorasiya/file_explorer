@@ -79,10 +79,13 @@ class _SearchPageState extends State<SearchPage> {
             padding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
             child: TextField(
               controller: searchTextController,
+              textInputAction: TextInputAction.go,
+              onEditingComplete: () {
+                searchForString();
+              },
               decoration: InputDecoration(
                 suffixIcon: IconButton(
                   onPressed: () {
-                    print('Length: ${childDirList.length}');
                     searchForString();
                   },
                   icon: Icon(Icons.search_rounded),

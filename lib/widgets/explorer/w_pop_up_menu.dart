@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:file_manager/pages/p_paste_page.dart';
 import 'package:file_manager/widgets/explorer/w_plain_text.dart';
 import 'package:flutter/material.dart';
@@ -74,6 +76,26 @@ class PopUpMenu extends StatelessWidget {
             break;
           case 1:
             // copy
+
+            for (var i = 0; i < c.selectedItem.length; i++) {
+              if (Directory(c.selectedItem[i]).existsSync()) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    backgroundColor: Colors.amber,
+                    content: Padding(
+                      padding: EdgeInsets.symmetric(vertical: 10.0),
+                      child: Text(
+                        "Deselect all Folder(s) to continue Operation.",
+                        style: TextStyle(fontSize: 15),
+                      ),
+                    ),
+                  ),
+                );
+
+                return;
+              }
+            }
+
             c.isTransfering.value = true;
             Navigator.pop(context);
             c.goToPage(
@@ -132,7 +154,19 @@ class PopUpMenu extends StatelessWidget {
                 actionText: "Delete",
                 actionCallBack: onDeletePressed,
                 onCancelPressed: () => onCancelPressed(),
-                content: const Text("Are you sure to delete selected Item?"),
+                content: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: const [
+                    Text("Are you sure to delete selected Item?"),
+                    Text(
+                      "(All files will be deleted from selected Folder.)",
+                      style: TextStyle(
+                        color: Colors.redAccent,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             );
             break;

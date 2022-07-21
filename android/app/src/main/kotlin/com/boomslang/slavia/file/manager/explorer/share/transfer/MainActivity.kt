@@ -1,4 +1,4 @@
-package com.example.file_manager
+package com.boomslang.slavia.file.manager.explorer.share.transfer
 
 import io.flutter.embedding.android.FlutterActivity
 
