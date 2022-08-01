@@ -16,9 +16,13 @@ class Controller extends GetxController {
   var colorCodes = <Map<String, dynamic>>[
     {
       'light': {
-        'mainColor': Colors.amber,
+        'mainColor': Colors.white,
+        'contrastColor': Colors.grey[900],
       },
-      'dark': [],
+      'dark': {
+        'mainColor': Colors.grey[900],
+        'contrastColor': Colors.white,
+      },
     }
   ].obs;
 
