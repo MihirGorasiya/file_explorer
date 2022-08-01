@@ -193,8 +193,7 @@ class PopUpMenu extends StatelessWidget {
                   children: [
                     const SizedBox(height: 20),
                     const Text("Size"),
-                    Text(
-                        '${c.sizeDetails.value.toString().substring(0, 5)} GB'),
+                    Text(c.sizeDetails.value),
                     const SizedBox(height: 20),
                   ],
                 ),
@@ -203,54 +202,6 @@ class PopUpMenu extends StatelessWidget {
             break;
           default:
         }
-        // if (item == 0) {
-        //   c.createErrorMessage.value = '';
-        //   textController.text = 'New Folder';
-        //   showDialog(
-        //     context: context,
-        //     builder: (context) => Obx(
-        //       () => AlertDialog(
-        //         contentPadding:
-        //             const EdgeInsets.symmetric(horizontal: 24, vertical: 0),
-        //         title: const Text("Create new folder"),
-        //         content: Column(
-        //           crossAxisAlignment: CrossAxisAlignment.start,
-        //           mainAxisSize: MainAxisSize.min,
-        //           children: [
-        //             TextField(
-        //               autofocus: true,
-        //               decoration: const InputDecoration(
-        //                 hintText: "Enter Folder Name",
-        //               ),
-        //               controller: textController,
-        //             ),
-        //             SizedBox(
-        //               height: 25,
-        //               child: Text(
-        //                 c.createErrorMessage.value,
-        //                 style: const TextStyle(color: Colors.red),
-        //               ),
-        //             ),
-        //           ],
-        //         ),
-        //         actions: [
-        //           PlainTextButton(
-        //             onPressed: onCancelPressed,
-        //             text: "Cancel",
-        //             textColor: Colors.amber,
-        //             bgColor: Colors.grey[900],
-        //           ),
-        //           PlainTextButton(
-        //             onPressed: onCreatePressed,
-        //             text: "Create",
-        //             bgColor: Colors.amber,
-        //             textColor: Colors.grey[900],
-        //           ),
-        //         ],
-        //       ),
-        //     ),
-        //   );
-        // }
       },
       itemBuilder: (BuildContext context) => isSelecting
           ? <PopupMenuEntry>[

@@ -1,6 +1,6 @@
 import 'dart:io';
-import 'dart:math';
 
+import 'package:filesize/filesize.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -11,7 +11,16 @@ class Controller extends GetxController {
   var copyDestPath = ''.obs;
   var cutDestPath = ''.obs;
   var statusString = 'Searching For Files'.obs;
-  var sizeDetails = (0.0).obs;
+  var darkMode = true.obs;
+  var sizeDetails = '0'.obs;
+  var colorCodes = <Map<String, dynamic>>[
+    {
+      'light': {
+        'mainColor': Colors.amber,
+      },
+      'dark': [],
+    }
+  ].obs;
 
   var sdPath = '';
 
@@ -34,7 +43,7 @@ class Controller extends GetxController {
 
   void getSizeDetails() {
     int fileNum = 0;
-    double totalSize = 0;
+    int totalSize = 0;
     for (var i = 0; i < selectedItem.length; i++) {
       if (isFile(selectedItem[i])) {
         totalSize += File(selectedItem[i]).lengthSync();
@@ -44,14 +53,11 @@ class Controller extends GetxController {
             .forEach((element) {
           if (element is File) {
             fileNum++;
-            totalSize += element.lengthSync();
+            totalSize += element.lengthSync().ceil();
           }
         });
       }
     }
-
-    totalSize = totalSize / pow(1024, 3);
-    totalSize.toDouble();
-    sizeDetails = totalSize.obs;
+    sizeDetails.value = filesize(totalSize);
   }
 }

@@ -26,7 +26,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final Controller c = Get.put(Controller());
+  final Controller c = Get.find();
   double? totalSpace = 0;
   double? usedSpace = 0;
   double? cardFreeSpace = 0;

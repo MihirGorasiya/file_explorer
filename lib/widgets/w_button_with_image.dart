@@ -26,7 +26,10 @@ class ButtonWithImage extends StatelessWidget {
               color: Colors.grey[800],
               borderRadius: BorderRadius.circular(25),
             ),
-            child: Icon(buttonIcon),
+            child: Icon(
+              buttonIcon,
+              color: Colors.white,
+            ),
           ),
           SizedBox(
             height: 10,
