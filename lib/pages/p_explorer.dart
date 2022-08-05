@@ -121,7 +121,6 @@ class _ExplorerPageState extends State<ExplorerPage> {
       context,
       ExplorerPage(dirPath: widget.dirPath, isSelecting: false),
     );
-    // getChildDirList();
   }
 
   void onRenamePressed() async {
@@ -146,6 +145,7 @@ class _ExplorerPageState extends State<ExplorerPage> {
 
   @override
   void initState() {
+    print(widget.dirPath);
     requestPermission();
     getChildDirList();
     setCurrentDirName();

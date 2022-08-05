@@ -5,14 +5,18 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class Controller extends GetxController {
-  var isTransfering = false.obs;
-  var selectedItem = <String>[].obs;
+  // -------------------- String --------------------
   var createErrorMessage = ''.obs;
   var copyDestPath = ''.obs;
   var cutDestPath = ''.obs;
   var statusString = 'Searching For Files'.obs;
-  var darkMode = true.obs;
   var sizeDetails = '0'.obs;
+
+  // -------------------- Bool --------------------
+  var isTransfering = false.obs;
+  var darkMode = true.obs;
+  // -------------------- Bool --------------------
+  var selectedItem = <String>[].obs;
   var colorCodes = <Map<String, dynamic>>[
     {
       'light': {

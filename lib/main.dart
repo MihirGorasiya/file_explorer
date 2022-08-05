@@ -3,6 +3,7 @@
 import 'package:easy_splash_screen/easy_splash_screen.dart';
 import 'package:file_manager/pages/p_home.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -20,6 +21,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
     return Obx(() => MaterialApp(
           debugShowCheckedModeBanner: false,
           title: 'Flutter Demo',
@@ -72,7 +74,8 @@ class MyApp extends StatelessWidget {
                 fontWeight: FontWeight.w100,
               ),
             ),
-            backgroundColor: Colors.grey.shade800,
+            backgroundColor:
+                c.darkMode.value ? Colors.grey.shade800 : Colors.white,
             navigator: const HomePage(),
           ),
         ));
