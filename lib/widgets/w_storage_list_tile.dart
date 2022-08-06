@@ -55,7 +55,9 @@ class StorageListTile extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.w500,
-                      color: c.darkMode.value ? Colors.amber : Colors.grey[900],
+                      color: c.darkMode.value
+                          ? c.themeColors[c.themeColorIndex.value]
+                          : Colors.grey[900],
                     ),
                   ),
                   const SizedBox(height: 5),
@@ -64,14 +66,18 @@ class StorageListTile extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.w300,
-                      color: c.darkMode.value ? Colors.amber : Colors.grey[900],
+                      color: c.darkMode.value
+                          ? c.themeColors[c.themeColorIndex.value]
+                          : Colors.grey[900],
                     ),
                   ),
                 ],
               ),
               Icon(
                 Icons.arrow_forward_ios_rounded,
-                color: c.darkMode.value ? Colors.amber : Colors.grey[900],
+                color: c.darkMode.value
+                    ? c.themeColors[c.themeColorIndex.value]
+                    : Colors.grey[900],
               ),
             ],
           ),

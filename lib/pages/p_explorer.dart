@@ -178,7 +178,7 @@ class _ExplorerPageState extends State<ExplorerPage> {
             child: widget.isSelecting
                 ? CircleAvatar(
                     backgroundColor: Colors.black38,
-                    foregroundColor: Colors.amber,
+                    foregroundColor: c.themeColors[c.themeColorIndex.value],
                     child: Obx(
                       () => Text(
                         c.selectedItem.length.toString(),

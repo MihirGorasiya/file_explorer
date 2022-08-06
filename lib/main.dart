@@ -58,10 +58,10 @@ class _MyAppState extends State<MyApp> {
         theme: ThemeData(
           fontFamily: GoogleFonts.baloo2().fontFamily,
           // primarySwatch: c.themeColors[c.themeColorIndex.value],
-          primarySwatch: Colors.amber,
+          primarySwatch: c.themeColors[c.themeColorIndex.value],
           colorScheme: ColorScheme.light(
-            primary: Colors.amber,
-            secondary: Colors.amber,
+            primary: c.themeColors[c.themeColorIndex.value],
+            secondary: c.themeColors[c.themeColorIndex.value],
           ),
           brightness: Brightness.light,
           appBarTheme: AppBarTheme(
@@ -73,10 +73,10 @@ class _MyAppState extends State<MyApp> {
         ),
         darkTheme: ThemeData(
           fontFamily: GoogleFonts.baloo2().fontFamily,
-          primarySwatch: Colors.amber,
+          primarySwatch: c.themeColors[c.themeColorIndex.value],
           colorScheme: ColorScheme.dark(
-            primary: Colors.amber,
-            secondary: Colors.amber,
+            primary: c.themeColors[c.themeColorIndex.value],
+            secondary: c.themeColors[c.themeColorIndex.value],
           ),
           brightness: Brightness.dark,
           appBarTheme: AppBarTheme(
@@ -92,7 +92,7 @@ class _MyAppState extends State<MyApp> {
             style: TextStyle(
               fontSize: 25,
               fontWeight: FontWeight.bold,
-              color: Colors.amber,
+              color: c.themeColors[c.themeColorIndex.value],
             ),
           ),
           showLoader: false,
@@ -100,7 +100,7 @@ class _MyAppState extends State<MyApp> {
             'Beta Version',
             style: TextStyle(
               fontSize: 15,
-              color: Colors.amber,
+              color: c.themeColors[c.themeColorIndex.value],
               fontWeight: FontWeight.w100,
             ),
           ),

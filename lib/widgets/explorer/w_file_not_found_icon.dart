@@ -24,10 +24,10 @@ class _FileNotFoundIconState extends State<FileNotFoundIcon> {
         children: [
           Obx(
             () => c.statusString.value == 'No File Found !'
-                ? const Icon(
+                ? Icon(
                     Icons.warning_rounded,
                     size: 70,
-                    color: Colors.amber,
+                    color: c.themeColors[c.themeColorIndex.value],
                   )
                 : const CircularProgressIndicator(),
           ),

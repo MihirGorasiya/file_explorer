@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
-class StorageInfoBanner extends StatelessWidget {
+import '../statecontrol/controller.dart';
+
+class StorageInfoBanner extends StatefulWidget {
   const StorageInfoBanner({
     Key? key,
     required this.usedSpace,
@@ -13,11 +16,17 @@ class StorageInfoBanner extends StatelessWidget {
   final double? totalSpace;
 
   @override
+  State<StorageInfoBanner> createState() => _StorageInfoBannerState();
+}
+
+class _StorageInfoBannerState extends State<StorageInfoBanner> {
+  final Controller c = Get.find();
+  @override
   Widget build(BuildContext context) {
     return Container(
       margin: const EdgeInsets.all(30),
       decoration: BoxDecoration(
-        color: Colors.amber,
+        color: c.themeColors[c.themeColorIndex.value],
         borderRadius: BorderRadius.circular(25),
       ),
       height: 150,
@@ -38,16 +47,17 @@ class StorageInfoBanner extends StatelessWidget {
                   children: [
                     Center(
                         child: Text(
-                      usedSpace == 0
+                      widget.usedSpace == 0
                           ? '85%'
-                          : '${(usedSpacePer! * 100).ceil()}%',
+                          : '${(widget.usedSpacePer! * 100).ceil()}%',
                       style: TextStyle(
                           color: Colors.grey[700],
                           fontSize: 18,
                           fontWeight: FontWeight.w800),
                     )),
                     CircularProgressIndicator(
-                      value: usedSpace == 0 ? 0.75 : usedSpacePer!,
+                      value:
+                          widget.usedSpace == 0 ? 0.75 : widget.usedSpacePer!,
                       color: Colors.grey[700],
                     ),
                   ],
@@ -83,9 +93,9 @@ class StorageInfoBanner extends StatelessWidget {
                   ),
                   const SizedBox(height: 10),
                   Text(
-                    usedSpace == 0
+                    widget.usedSpace == 0
                         ? '00.0 GB/00.0 GB'
-                        : '${usedSpace}GB/${totalSpace}GB used',
+                        : '${widget.usedSpace}GB/${widget.totalSpace}GB used',
                     style: TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.w400,

@@ -17,7 +17,7 @@ class SettingPage extends StatefulWidget {
 class _SettingPageState extends State<SettingPage> {
   final Controller c = Get.find();
 
-  // TextStyle tStyle = const TextStyle(color: Colors.amber, fontSize: 17);
+  // TextStyle tStyle = const TextStyle(color: c.themeColors[c.themeColorIndex.value], fontSize: 17);
 
   late SharedPreferences prefs;
 
@@ -85,6 +85,7 @@ class _SettingPageState extends State<SettingPage> {
                             return InkWell(
                               onTap: () {
                                 c.themeColorIndex.value = index;
+                                prefs.setInt('themeColorIndex', index);
                               },
                               child: Container(
                                 decoration: BoxDecoration(
@@ -123,7 +124,7 @@ class _SettingPageState extends State<SettingPage> {
 // Text(
 // 'Upcoming Features',
 // style: TextStyle(
-// color: Colors.amber,
+// color: c.themeColors[c.themeColorIndex.value],
 // fontSize: 25,
 // ),
 // ),

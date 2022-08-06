@@ -1,6 +1,9 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+
+import '../../statecontrol/controller.dart';
 
 class FileIconWidget extends StatelessWidget {
   const FileIconWidget({
@@ -12,10 +15,11 @@ class FileIconWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final Controller c = Get.find();
     return Container(
       padding: const EdgeInsets.all(7),
       decoration: BoxDecoration(
-        color: Colors.amber,
+        color: c.themeColors[c.themeColorIndex.value],
         borderRadius: BorderRadius.circular(15),
       ),
       child: LayoutBuilder(

@@ -22,7 +22,7 @@ class SelectIconWidget extends StatelessWidget {
                 c.selectedItem.contains(fileName)
                     ? Icons.check_box
                     : Icons.check_box_outline_blank_rounded,
-                color: Colors.amber,
+                color: c.themeColors[c.themeColorIndex.value],
               ))
           : null,
     );

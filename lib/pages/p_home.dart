@@ -83,134 +83,137 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            StorageInfoBanner(
-              usedSpace: usedSpace,
-              usedSpacePer: usedSpacePer,
-              totalSpace: totalSpace,
-            ),
-            Container(
-              margin: EdgeInsets.symmetric(horizontal: 25),
-              height: 260,
-              decoration: BoxDecoration(
-                color: Colors.amber,
-                borderRadius: BorderRadius.circular(25),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.amber.withOpacity(0.4),
-                    spreadRadius: 3,
-                    blurRadius: 1.5,
-                  ),
-                ],
+      body: Obx(
+        () => SingleChildScrollView(
+          child: Column(
+            children: [
+              StorageInfoBanner(
+                usedSpace: usedSpace,
+                usedSpacePer: usedSpacePer,
+                totalSpace: totalSpace,
               ),
-              child: GridView(
-                padding: EdgeInsets.all(15),
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 3),
-                physics: NeverScrollableScrollPhysics(),
-                children: [
-                  ButtonWithImage(
-                    buttonIcon: Icons.image,
-                    buttonDesc: "Images",
-                    onPressed: () => c.goToPage(
-                      context,
-                      FilteredExplorerPage(
-                        fileType: 'Images',
-                        // isSelecting: false,
-                      ),
+              Container(
+                margin: EdgeInsets.symmetric(horizontal: 25),
+                height: 260,
+                decoration: BoxDecoration(
+                  color: c.themeColors[c.themeColorIndex.value],
+                  borderRadius: BorderRadius.circular(25),
+                  boxShadow: [
+                    BoxShadow(
+                      color: c.themeColors[c.themeColorIndex.value]
+                          .withOpacity(0.4),
+                      spreadRadius: 3,
+                      blurRadius: 1.5,
                     ),
-                  ),
-                  ButtonWithImage(
-                    buttonIcon: Icons.movie_filter,
-                    buttonDesc: "Videos",
-                    onPressed: () => c.goToPage(
-                      context,
-                      FilteredExplorerPage(
-                        fileType: 'Videos',
-                        // isSelecting: false,
-                      ),
-                    ),
-                  ),
-                  ButtonWithImage(
-                    buttonIcon: Icons.music_note_rounded,
-                    buttonDesc: "Audio",
-                    onPressed: () => c.goToPage(
-                      context,
-                      FilteredExplorerPage(
-                        fileType: 'Audios',
-                        // isSelecting: false,
-                      ),
-                    ),
-                  ),
-                  ButtonWithImage(
-                    buttonIcon: CupertinoIcons.doc_fill,
-                    buttonDesc: "Documents",
-                    onPressed: () => c.goToPage(
-                      context,
-                      FilteredExplorerPage(
-                        fileType: 'Documents',
-                        // isSelecting: false,
-                      ),
-                    ),
-                  ),
-                  ButtonWithImage(
-                    buttonIcon: Icons.whatsapp_rounded,
-                    buttonDesc: "WhatsApp",
-                    onPressed: () => c.goToPage(context, WhatsAppMediaPage()
-                        // FilteredExplorerPage(
-                        //   fileType: 'Apks',
-                        //   // isSelecting: false,
-                        // ),
+                  ],
+                ),
+                child: GridView(
+                  padding: EdgeInsets.all(15),
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 3),
+                  physics: NeverScrollableScrollPhysics(),
+                  children: [
+                    ButtonWithImage(
+                      buttonIcon: Icons.image,
+                      buttonDesc: "Images",
+                      onPressed: () => c.goToPage(
+                        context,
+                        FilteredExplorerPage(
+                          fileType: 'Images',
+                          // isSelecting: false,
                         ),
-                  ),
-                  ButtonWithImage(
-                    buttonIcon: Icons.download_rounded,
-                    buttonDesc: "Downloads",
-                    onPressed: () => c.goToPage(
-                      context,
-                      ExplorerPage(
-                        dirPath: '/storage/emulated/0/download',
-                        isSelecting: false,
                       ),
                     ),
+                    ButtonWithImage(
+                      buttonIcon: Icons.movie_filter,
+                      buttonDesc: "Videos",
+                      onPressed: () => c.goToPage(
+                        context,
+                        FilteredExplorerPage(
+                          fileType: 'Videos',
+                          // isSelecting: false,
+                        ),
+                      ),
+                    ),
+                    ButtonWithImage(
+                      buttonIcon: Icons.music_note_rounded,
+                      buttonDesc: "Audio",
+                      onPressed: () => c.goToPage(
+                        context,
+                        FilteredExplorerPage(
+                          fileType: 'Audios',
+                          // isSelecting: false,
+                        ),
+                      ),
+                    ),
+                    ButtonWithImage(
+                      buttonIcon: CupertinoIcons.doc_fill,
+                      buttonDesc: "Documents",
+                      onPressed: () => c.goToPage(
+                        context,
+                        FilteredExplorerPage(
+                          fileType: 'Documents',
+                          // isSelecting: false,
+                        ),
+                      ),
+                    ),
+                    ButtonWithImage(
+                      buttonIcon: Icons.whatsapp_rounded,
+                      buttonDesc: "WhatsApp",
+                      onPressed: () => c.goToPage(context, WhatsAppMediaPage()
+                          // FilteredExplorerPage(
+                          //   fileType: 'Apks',
+                          //   // isSelecting: false,
+                          // ),
+                          ),
+                    ),
+                    ButtonWithImage(
+                      buttonIcon: Icons.download_rounded,
+                      buttonDesc: "Downloads",
+                      onPressed: () => c.goToPage(
+                        context,
+                        ExplorerPage(
+                          dirPath: '/storage/emulated/0/download',
+                          isSelecting: false,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(height: 30),
+              StorageListTile(
+                onPressed: () => c.goToPage(
+                  context,
+                  ExplorerPage(
+                    dirPath: '/storage/emulated/0',
+                    isSelecting: false,
                   ),
-                ],
-              ),
-            ),
-            SizedBox(height: 30),
-            StorageListTile(
-              onPressed: () => c.goToPage(
-                context,
-                ExplorerPage(
-                  dirPath: '/storage/emulated/0',
-                  isSelecting: false,
                 ),
+                storageTitle: 'Internal storage',
+                usedSpace: usedSpace,
+                totalSpace: totalSpace,
+                storageInfo: usedSpace == 0
+                    ? '00.0 GB/00.0 GB'
+                    : '$usedSpace GB of $totalSpace GB used',
               ),
-              storageTitle: 'Internal storage',
-              usedSpace: usedSpace,
-              totalSpace: totalSpace,
-              storageInfo: usedSpace == 0
-                  ? '00.0 GB/00.0 GB'
-                  : '$usedSpace GB of $totalSpace GB used',
-            ),
-            StorageListTile(
-              onPressed: () => c.goToPage(
-                context,
-                ExplorerPage(
-                  dirPath: c.sdPath,
-                  isSelecting: false,
+              StorageListTile(
+                onPressed: () => c.goToPage(
+                  context,
+                  ExplorerPage(
+                    dirPath: c.sdPath,
+                    isSelecting: false,
+                  ),
                 ),
+                storageTitle: 'SD card',
+                usedSpace: usedSpace,
+                totalSpace: totalSpace,
+                storageInfo: cardFreeSpace == 0
+                    ? '00.0 GB Free'
+                    : '$cardFreeSpace GB Free',
               ),
-              storageTitle: 'SD card',
-              usedSpace: usedSpace,
-              totalSpace: totalSpace,
-              storageInfo: cardFreeSpace == 0
-                  ? '00.0 GB Free'
-                  : '$cardFreeSpace GB Free',
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

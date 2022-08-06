@@ -3,7 +3,9 @@
 import 'package:file_manager/pages/wa_pages/p_wa_images.dart';
 import 'package:file_manager/pages/wa_pages/p_wa_video.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
+import '../statecontrol/controller.dart';
 import 'wa_pages/p_wa_audio.dart';
 
 class WhatsAppMediaPage extends StatefulWidget {
@@ -14,6 +16,7 @@ class WhatsAppMediaPage extends StatefulWidget {
 }
 
 class _WhatsAppMediaPageState extends State<WhatsAppMediaPage> {
+  final Controller c = Get.find();
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -22,7 +25,7 @@ class _WhatsAppMediaPageState extends State<WhatsAppMediaPage> {
         appBar: AppBar(
           title: Text('WhatsApp'),
           bottom: TabBar(
-            indicatorColor: Colors.amber,
+            indicatorColor: c.themeColors[c.themeColorIndex.value],
             tabs: [
               Tab(
                 icon: Icon(Icons.image_rounded),

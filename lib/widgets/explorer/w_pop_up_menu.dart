@@ -79,9 +79,9 @@ class PopUpMenu extends StatelessWidget {
             for (var i = 0; i < c.selectedItem.length; i++) {
               if (Directory(c.selectedItem[i]).existsSync()) {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    backgroundColor: Colors.amber,
-                    content: Padding(
+                  SnackBar(
+                    backgroundColor: c.themeColors[c.themeColorIndex.value],
+                    content: const Padding(
                       padding: EdgeInsets.symmetric(vertical: 10.0),
                       child: Text(
                         "Deselect all Folder(s) to continue Operation.",
@@ -107,9 +107,9 @@ class PopUpMenu extends StatelessWidget {
             for (var i = 0; i < c.selectedItem.length; i++) {
               if (Directory(c.selectedItem[i]).existsSync()) {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    backgroundColor: Colors.amber,
-                    content: Padding(
+                  SnackBar(
+                    backgroundColor: c.themeColors[c.themeColorIndex.value],
+                    content: const Padding(
                       padding: EdgeInsets.symmetric(vertical: 10.0),
                       child: Text(
                         "Deselect all Folder(s) to continue Operation.",
@@ -295,13 +295,13 @@ class MyAlertDialog extends StatelessWidget {
         PlainTextButton(
           onPressed: onCancelPressed,
           text: "Cancel",
-          textColor: Colors.amber,
+          textColor: c.themeColors[c.themeColorIndex.value],
           bgColor: Colors.grey[900],
         ),
         PlainTextButton(
           onPressed: actionCallBack,
           text: actionText,
-          bgColor: Colors.amber,
+          bgColor: c.themeColors[c.themeColorIndex.value],
           textColor: Colors.grey[900],
         ),
       ],

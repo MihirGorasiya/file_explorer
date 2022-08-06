@@ -88,7 +88,7 @@ class _SearchPageState extends State<SearchPage> {
                     searchForString();
                   },
                   icon: Icon(Icons.search_rounded),
-                  color: Colors.amber,
+                  color: c.themeColors[c.themeColorIndex.value],
                 ),
                 border: OutlineInputBorder(),
               ),

@@ -199,8 +199,8 @@ class _PastePageState extends State<PastePage> {
                           tileColor: Colors.grey[800],
                           title: Text(
                             storageName[index],
-                            style: const TextStyle(
-                                color: Colors.amber,
+                            style: TextStyle(
+                                color: c.themeColors[c.themeColorIndex.value],
                                 fontWeight: FontWeight.bold),
                           ),
                           trailing: const Icon(
@@ -226,7 +226,7 @@ class _PastePageState extends State<PastePage> {
                         ? PlainTextButton(
                             onPressed: () => pasteCopiedFiles(),
                             text: "Paste Here",
-                            bgColor: Colors.amber,
+                            bgColor: c.themeColors[c.themeColorIndex.value],
                             textColor: Colors.grey[900],
                           )
                         : null,

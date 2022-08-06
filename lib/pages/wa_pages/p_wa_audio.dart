@@ -50,7 +50,7 @@ class _WhatsAppAudiosPageState extends State<WhatsAppAudiosPage> {
                   height: 50,
                   width: 50,
                   decoration: BoxDecoration(
-                    color: Colors.amber,
+                    color: c.themeColors[c.themeColorIndex.value],
                     borderRadius: BorderRadius.circular(7),
                   ),
                   child: Icon(
