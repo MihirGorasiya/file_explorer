@@ -76,7 +76,6 @@ class PopUpMenu extends StatelessWidget {
             break;
           case 1:
             // copy
-
             for (var i = 0; i < c.selectedItem.length; i++) {
               if (Directory(c.selectedItem[i]).existsSync()) {
                 ScaffoldMessenger.of(context).showSnackBar(
@@ -96,16 +95,44 @@ class PopUpMenu extends StatelessWidget {
               }
             }
 
-            c.isTransfering.value = true;
+            c.isTransfering.value = 1;
             Navigator.pop(context);
             c.goToPage(
               context,
               const PastePage(),
             );
             break;
-          // case 2:
-          //   // TODO: Add Move code Here
-          //   break;
+          case 2:
+            // Move
+            for (var i = 0; i < c.selectedItem.length; i++) {
+              if (Directory(c.selectedItem[i]).existsSync()) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    backgroundColor: Colors.amber,
+                    content: Padding(
+                      padding: EdgeInsets.symmetric(vertical: 10.0),
+                      child: Text(
+                        "Deselect all Folder(s) to continue Operation.",
+                        style: TextStyle(fontSize: 15),
+                      ),
+                    ),
+                  ),
+                );
+                return;
+              }
+            }
+
+            //TODO: Replace Move Code
+            c.isTransfering.value = 2;
+            Navigator.pop(context);
+            c.goToPage(
+              context,
+              const PastePage(),
+            );
+
+            // c.isTransfering.value = true;
+
+            break;
 
           case 3:
             // Rename
@@ -207,12 +234,12 @@ class PopUpMenu extends StatelessWidget {
           ? <PopupMenuEntry>[
               const PopupMenuItem(
                 value: 1,
-                child: Text('Copy (File Only)'),
+                child: Text('Copy'),
               ),
-              // const PopupMenuItem(
-              //   value: 2,
-              //   child: Text('Move'),
-              // ),
+              const PopupMenuItem(
+                value: 2,
+                child: Text('Move'),
+              ),
               PopupMenuItem(
                 value: 3,
                 enabled: c.selectedItem.length == 1,

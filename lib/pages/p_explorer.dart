@@ -43,21 +43,29 @@ class _ExplorerPageState extends State<ExplorerPage> {
     c.statusString.value = 'Searching For Files';
     List<String> tempList;
 
+    // Get all Dir List
     tempList =
         await Directory(widget.dirPath).list().map((e) => e.path).toList();
 
-    for (int i = 0; i < tempList.length; i++) {
-      if (tempList[i].split('/').last.startsWith('.')) {
-        tempList.removeAt(i);
+    // if showHiddenFile is enabled
+    if (!c.showHiddenFiles.value) {
+      // Remove dir start with .
+      for (int i = 0; i < tempList.length; i++) {
+        if (tempList[i].split('/').last.startsWith('.')) {
+          tempList.removeAt(i);
+        }
       }
     }
 
+    // sort by name
     tempList.sort((a, b) {
       return a.toLowerCase().compareTo(b.toLowerCase());
     });
 
+    // filter files and folder
     for (int i = 0; i < tempList.length; i++) {
-      if (tempList[i].split('/').last.startsWith('.')) {
+      if (tempList[i].split('/').last.startsWith('.') &&
+          !c.showHiddenFiles.value) {
         tempList.removeAt(i);
       } else {
         if (c.isFile(tempList[i])) {
@@ -68,9 +76,12 @@ class _ExplorerPageState extends State<ExplorerPage> {
       }
     }
     // childDirList = tempList;
+
+    // Add files in the end of list
     for (var i = 0; i < childfileList.length; i++) {
       childDirList.add(childfileList[i]);
     }
+
     setState(() {});
     c.statusString.value = 'No File Found !';
   }
@@ -81,7 +92,9 @@ class _ExplorerPageState extends State<ExplorerPage> {
 
     if (currentDir == "0") {
       currentDir = "Internal Storage";
-    } else if (currentDir == "453E-10F7") {
+    }
+    // if (currentDir == "453E-10F7")
+    else {
       currentDir = "SD Card";
     }
     setState(() {});
@@ -109,9 +122,13 @@ class _ExplorerPageState extends State<ExplorerPage> {
 
     for (int i = 0; i < selectedItemCount; i++) {
       if (c.isFile(c.selectedItem[i])) {
-        File(c.selectedItem[i]).deleteSync();
+        await File(c.selectedItem[i]).delete();
       } else {
-        Directory(c.selectedItem[i]).deleteSync(recursive: true);
+        if (c.safeDelete.value) {
+          await Directory(c.selectedItem[i]).delete();
+        } else {
+          await Directory(c.selectedItem[i]).delete(recursive: true);
+        }
       }
     }
     Navigator.pop(context);
@@ -145,7 +162,6 @@ class _ExplorerPageState extends State<ExplorerPage> {
 
   @override
   void initState() {
-    print(widget.dirPath);
     requestPermission();
     getChildDirList();
     setCurrentDirName();

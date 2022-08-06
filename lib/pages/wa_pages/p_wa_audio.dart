@@ -3,7 +3,9 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:open_file/open_file.dart';
+import 'package:get/get.dart';
+
+import '../../statecontrol/controller.dart';
 
 class WhatsAppAudiosPage extends StatefulWidget {
   const WhatsAppAudiosPage({Key? key}) : super(key: key);
@@ -13,6 +15,7 @@ class WhatsAppAudiosPage extends StatefulWidget {
 }
 
 class _WhatsAppAudiosPageState extends State<WhatsAppAudiosPage> {
+  final Controller c = Get.find();
   final String audioDirectoryPath =
       '/storage/emulated/0/Android/media/com.whatsapp/WhatsApp/Media/WhatsApp Audio';
   late List<String> audioPaths = [];
@@ -41,7 +44,7 @@ class _WhatsAppAudiosPageState extends State<WhatsAppAudiosPage> {
             itemBuilder: (context, index) {
               return ListTile(
                 onTap: () {
-                  OpenFile.open(audioPaths[index]);
+                  c.onOpenFile(audioPaths[index]);
                 },
                 leading: Container(
                   height: 50,

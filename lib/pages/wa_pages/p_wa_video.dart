@@ -3,7 +3,9 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:open_file/open_file.dart';
+import 'package:get/get.dart';
+
+import '../../statecontrol/controller.dart';
 
 class WhatsAppVideosPage extends StatefulWidget {
   const WhatsAppVideosPage({Key? key}) : super(key: key);
@@ -13,6 +15,7 @@ class WhatsAppVideosPage extends StatefulWidget {
 }
 
 class _WhatsAppVideosPageState extends State<WhatsAppVideosPage> {
+  final Controller c = Get.find();
   final String videoDirectoryPath =
       '/storage/emulated/0/Android/media/com.whatsapp/WhatsApp/Media/WhatsApp Video';
   late List<String> videoPaths = [];
@@ -40,7 +43,7 @@ class _WhatsAppVideosPageState extends State<WhatsAppVideosPage> {
             itemBuilder: (context, index) {
               return ListTile(
                 onTap: () {
-                  OpenFile.open(videoPaths[index]);
+                  c.onOpenFile(videoPaths[index]);
                 },
                 leading: Container(
                   height: 50,
@@ -58,6 +61,6 @@ class _WhatsAppVideosPageState extends State<WhatsAppVideosPage> {
               );
             },
           )
-        : CircularProgressIndicator();
+        : Center(child: CircularProgressIndicator());
   }
 }

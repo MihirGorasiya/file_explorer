@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:filesize/filesize.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:open_file/open_file.dart';
 
 class Controller extends GetxController {
   // -------------------- String --------------------
@@ -13,10 +14,29 @@ class Controller extends GetxController {
   var sizeDetails = '0'.obs;
 
   // -------------------- Bool --------------------
-  var isTransfering = false.obs;
+  // TODO: Add bool for premium check
+  var isTransfering = 0.obs;
   var darkMode = true.obs;
-  // -------------------- Bool --------------------
+  var showHiddenFiles = true.obs;
+  var safeDelete = false.obs;
+
+  // -------------------- Int --------------------
+  var themeColorIndex = 0.obs;
+
+  // -------------------- Others --------------------
   var selectedItem = <String>[].obs;
+  var themeColors = <MaterialColor>[
+    Colors.amber,
+    Colors.blue,
+    Colors.red,
+    Colors.teal,
+    Colors.purple,
+    Colors.orange,
+    Colors.lime,
+    Colors.indigo,
+    Colors.cyan,
+    Colors.green,
+  ];
   var colorCodes = <Map<String, dynamic>>[
     {
       'light': {
@@ -50,7 +70,7 @@ class Controller extends GetxController {
   }
 
   void getSizeDetails() {
-    int fileNum = 0;
+    // int fileNum = 0;
     int totalSize = 0;
     for (var i = 0; i < selectedItem.length; i++) {
       if (isFile(selectedItem[i])) {
@@ -60,12 +80,16 @@ class Controller extends GetxController {
             .listSync(recursive: true, followLinks: false)
             .forEach((element) {
           if (element is File) {
-            fileNum++;
+            // fileNum++;
             totalSize += element.lengthSync().ceil();
           }
         });
       }
     }
     sizeDetails.value = filesize(totalSize);
+  }
+
+  void onOpenFile(String filePath) {
+    OpenFile.open(filePath);
   }
 }

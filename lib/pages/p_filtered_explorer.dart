@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:file_manager/pages/w_select_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:open_file/open_file.dart';
 
 import '../statecontrol/controller.dart';
 import '../widgets/explorer/w_file_icon.dart';
@@ -22,56 +21,55 @@ class FilteredExplorerPage extends StatefulWidget {
 }
 
 class _FilteredExplorerPageState extends State<FilteredExplorerPage> {
-  // TODO: Add Functionality go to file dir
 
   final Controller c = Get.find();
   List<String> allRootDirPathList = [];
   List<String> childDirList = [];
 
-  bool isFileTypeMatches(String event) {
+  bool isFileTypeMatches(String fileName) {
     if (widget.fileType == 'Images') {
-      if (event.endsWith('.jpg') ||
-          event.endsWith('.jpeg') ||
-          event.endsWith('.tiff') ||
-          event.endsWith('.raw') ||
-          event.endsWith('.gif') ||
-          event.endsWith('.png')) {
+      if (fileName.endsWith('.jpg') ||
+          fileName.endsWith('.jpeg') ||
+          fileName.endsWith('.tiff') ||
+          fileName.endsWith('.raw') ||
+          fileName.endsWith('.gif') ||
+          fileName.endsWith('.png')) {
         return true;
       } else {
         return false;
       }
     } else if (widget.fileType == 'Videos') {
-      if (event.endsWith('.mp4') ||
-          event.endsWith('.avi') ||
-          event.endsWith('.mkv') ||
-          event.endsWith('.mov')) {
+      if (fileName.endsWith('.mp4') ||
+          fileName.endsWith('.avi') ||
+          fileName.endsWith('.mkv') ||
+          fileName.endsWith('.mov')) {
         return true;
       } else {
         return false;
       }
     } else if (widget.fileType == 'Audios') {
-      if (event.endsWith('.mp3') ||
-          event.endsWith('.aac') ||
-          event.endsWith('.ogg') ||
-          event.endsWith('.aiff') ||
-          event.endsWith('.wav')) {
+      if (fileName.endsWith('.mp3') ||
+          fileName.endsWith('.aac') ||
+          fileName.endsWith('.ogg') ||
+          fileName.endsWith('.aiff') ||
+          fileName.endsWith('.wav')) {
         return true;
       } else {
         return false;
       }
     } else if (widget.fileType == 'Documents') {
-      if (event.endsWith('.pdf') ||
-          event.endsWith('.doc') ||
-          event.endsWith('.docx') ||
-          event.endsWith('.txt') ||
-          event.endsWith('.ppt') ||
-          event.endsWith('.pptx')) {
+      if (fileName.endsWith('.pdf') ||
+          fileName.endsWith('.doc') ||
+          fileName.endsWith('.docx') ||
+          fileName.endsWith('.txt') ||
+          fileName.endsWith('.ppt') ||
+          fileName.endsWith('.pptx')) {
         return true;
       } else {
         return false;
       }
     } else {
-      if (event.endsWith('.apk')) {
+      if (fileName.endsWith('.apk')) {
         return true;
       } else {
         return false;
@@ -81,16 +79,20 @@ class _FilteredExplorerPageState extends State<FilteredExplorerPage> {
 
   void getAllFiles() async {
     c.statusString.value = 'Searching For Files';
+
+    // get all internal dir List
     allRootDirPathList = await Directory('/storage/emulated/0')
         .list()
         .map((e) => e.path)
         .toList();
 
+    // get all SD Card dir List
     List<String> sdDirs =
         await Directory(c.sdPath).list().map((e) => e.path).toList();
 
     allRootDirPathList.addAll(sdDirs);
 
+    // get specific type of Files
     int i = 0;
     while (i < allRootDirPathList.length) {
       if (!(allRootDirPathList[i].contains('.') ||
@@ -101,22 +103,11 @@ class _FilteredExplorerPageState extends State<FilteredExplorerPage> {
             .where((event) => isFileTypeMatches(event))
             .toList());
       }
-
       i++;
     }
 
-    // childDirList = await Directory('/storage/emulated/0/download')
-    //     .list()
-    //     .map((event) => event.path)
-    //     .where((event) => isFileTypeMatches(event))
-    //     .toList();
-
     setState(() {});
     c.statusString.value = 'No File Found !';
-  }
-
-  void onDirSelect(int index) {
-    OpenFile.open(childDirList[index]);
   }
 
   @override
@@ -138,7 +129,7 @@ class _FilteredExplorerPageState extends State<FilteredExplorerPage> {
                   padding: const EdgeInsets.symmetric(vertical: 5),
                   // color: Colors.grey[800],
                   child: InkWell(
-                    onTap: () => onDirSelect(index),
+                    onTap: () => c.onOpenFile(childDirList[index]),
                     child: Row(
                       children: [
                         FileIconWidget(fileName: childDirList[index]),

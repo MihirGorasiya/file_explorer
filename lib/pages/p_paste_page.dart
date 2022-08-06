@@ -2,6 +2,7 @@
 
 import 'dart:io';
 
+import 'package:file_manager/pages/p_explorer.dart';
 import 'package:file_manager/pages/w_select_icon.dart';
 import 'package:file_manager/statecontrol/controller.dart';
 import 'package:flutter/material.dart';
@@ -43,36 +44,63 @@ class _PastePageState extends State<PastePage> {
     setState(() {
       isCopying = true;
     });
-    //TODO: Function for Directory
 
     if (dirPath != storagePath[0] &&
         dirPath != storagePath[1] &&
         dirPath != '/') {
       for (var i = 0; i < c.selectedItem.length; i++) {
+        // Copy Directory
         if (Directory(c.selectedItem[i]).existsSync()) {
-          continue;
+          String dirName = c.selectedItem[i].split('/').last;
+          List<String> childFiles = await Directory(c.selectedItem[i])
+              .list()
+              .map((e) => e.path)
+              .toList();
+
+          for (var i = 0; i < childFiles.length; i++) {
+            String fileName = c.selectedItem[i].split('/').last;
+            await File(c.selectedItem[i]).copy('$dirPath/$dirName/$fileName');
+          }
         }
-        String fileName = c.selectedItem[i].split('/').last;
-        await File(c.selectedItem[i]).copy('$dirPath/$fileName');
+        // Copy Files
+        else {
+          String fileName = c.selectedItem[i].split('/').last;
+          await File(c.selectedItem[i]).copy('$dirPath/$fileName');
+        }
       }
     }
-    c.isTransfering.value = false;
-    Navigator.pop(context);
+
+    // Delete Files after copting
+    if (c.isTransfering.value == 2) {
+      for (var i = 0; i < c.selectedItem.length; i++) {
+        if (Directory(c.selectedItem[i]).existsSync()) {
+          await Directory(c.selectedItem[i]).delete();
+        }
+        if (File(c.selectedItem[i]).existsSync()) {
+          await File(c.selectedItem[i]).delete();
+        }
+      }
+    }
+
+    // set false transfering
+    c.isTransfering.value = 0;
     setState(() {
       isCopying = false;
     });
+    Navigator.pop(context);
+    Navigator.pop(context);
+    c.goToPage(context, ExplorerPage(dirPath: dirPath, isSelecting: false));
   }
 
   @override
   void initState() {
-    c.isTransfering.value = true;
     storagePath = ['/storage/emulated/0', c.sdPath];
     super.initState();
   }
 
   @override
   void dispose() {
-    c.isTransfering.value = false;
+    c.isTransfering.value = 0;
     super.dispose();
   }
 
@@ -194,7 +222,7 @@ class _PastePageState extends State<PastePage> {
               bottom: 35,
               width: MediaQuery.of(context).size.width,
               child: Obx(() => Center(
-                    child: c.isTransfering.value
+                    child: c.isTransfering.value != 0
                         ? PlainTextButton(
                             onPressed: () => pasteCopiedFiles(),
                             text: "Paste Here",

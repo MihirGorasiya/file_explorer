@@ -3,7 +3,9 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:open_file/open_file.dart';
+import 'package:get/get.dart';
+
+import '../../statecontrol/controller.dart';
 
 class WhatsAppImagesPage extends StatefulWidget {
   const WhatsAppImagesPage({Key? key}) : super(key: key);
@@ -13,6 +15,7 @@ class WhatsAppImagesPage extends StatefulWidget {
 }
 
 class _WhatsAppImagesPageState extends State<WhatsAppImagesPage> {
+  final Controller c = Get.find();
   final String imageDirectoryPath =
       '/storage/emulated/0/Android/media/com.whatsapp/WhatsApp/Media/WhatsApp Images';
   late List<String> imagePaths = [];
@@ -45,7 +48,7 @@ class _WhatsAppImagesPageState extends State<WhatsAppImagesPage> {
             itemBuilder: (context, index) {
               return InkWell(
                 onTap: () {
-                  OpenFile.open(imagePaths[index]);
+                  c.onOpenFile(imagePaths[index]);
                 },
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(25),
@@ -57,6 +60,6 @@ class _WhatsAppImagesPageState extends State<WhatsAppImagesPage> {
               );
             },
           )
-        : CircularProgressIndicator();
+        : Center(child: CircularProgressIndicator());
   }
 }

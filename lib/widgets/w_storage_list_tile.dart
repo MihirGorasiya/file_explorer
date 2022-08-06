@@ -29,14 +29,14 @@ class StorageListTile extends StatelessWidget {
         width: double.infinity,
         decoration: BoxDecoration(
           color: c.darkMode.value
-              ? Color.fromARGB(255, 46, 46, 46)
-              : Color.fromARGB(255, 230, 230, 230),
+              ? const Color.fromARGB(255, 46, 46, 46)
+              : const Color.fromARGB(255, 230, 230, 230),
           borderRadius: BorderRadius.circular(25),
           boxShadow: [
             BoxShadow(
               color: c.darkMode.value
-                  ? Color.fromARGB(255, 54, 54, 54)
-                  : Color.fromARGB(255, 230, 230, 230),
+                  ? const Color.fromARGB(255, 54, 54, 54)
+                  : const Color.fromARGB(255, 230, 230, 230),
               spreadRadius: 5,
               blurRadius: 1.5,
             ),

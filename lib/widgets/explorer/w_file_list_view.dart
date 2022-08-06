@@ -4,7 +4,6 @@ import 'package:file_manager/widgets/explorer/w_file_icon.dart';
 import 'package:file_manager/widgets/explorer/w_file_name_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:open_file/open_file.dart';
 
 import '../../pages/p_explorer.dart';
 import '../../pages/w_select_icon.dart';
@@ -35,13 +34,14 @@ class FileListView extends StatelessWidget {
       } else {
         if (Directory(childDirList[index]).existsSync()) {
           c.goToPage(
-              context,
-              ExplorerPage(
-                dirPath: childDirList[index],
-                isSelecting: false,
-              ));
+            context,
+            ExplorerPage(
+              dirPath: childDirList[index],
+              isSelecting: false,
+            ),
+          );
         } else {
-          OpenFile.open(childDirList[index]);
+          c.onOpenFile(childDirList[index]);
         }
       }
     }

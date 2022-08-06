@@ -4,7 +4,6 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:open_file/open_file.dart';
 
 import '../statecontrol/controller.dart';
 import '../widgets/explorer/w_file_icon.dart';
@@ -108,7 +107,7 @@ class _SearchPageState extends State<SearchPage> {
                     ),
                     title: Text(searchResultList[index].split('/').last),
                     onTap: () {
-                      OpenFile.open(searchResultList[index]);
+                      c.onOpenFile(searchResultList[index]);
                     },
                   );
                 },
