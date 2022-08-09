@@ -6,15 +6,11 @@ import '../statecontrol/controller.dart';
 class StorageListTile extends StatelessWidget {
   const StorageListTile({
     Key? key,
-    required this.usedSpace,
-    this.totalSpace,
     required this.onPressed,
     required this.storageTitle,
     required this.storageInfo,
   }) : super(key: key);
 
-  final double? usedSpace;
-  final double? totalSpace;
   final VoidCallback onPressed;
   final String storageTitle;
   final String storageInfo;

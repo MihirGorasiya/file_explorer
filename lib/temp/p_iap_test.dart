@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, avoid_print
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'package:flutter/material.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
@@ -35,10 +35,10 @@ class _IapPurchaseTestPageState extends State<IapPurchaseTestPage> {
 
                 try {
                   Offerings offerings = await Purchases.getOfferings();
-                  print('Offers:: ${offerings.current}');
+                  // print('Offers:: ${offerings.current}');
                   if (offerings.current != null) {
-                    print(
-                        'Offers:: ${offerings.current!.availablePackages[0]}');
+                    // print(
+                    //     'Offers:: ${offerings.current!.availablePackages[0]}');
                     text =
                         'Offers:: ${offerings.current!.availablePackages[0]}';
                     setState(() {});
@@ -46,12 +46,15 @@ class _IapPurchaseTestPageState extends State<IapPurchaseTestPage> {
                 } catch (e) {
                   text = 'Print:: $e';
                   setState(() {});
-                  print('Print:: $e');
+                  // print('Print:: $e');
                 }
               },
               child: Text('test'),
             ),
-            Text(text),
+            Container(
+              padding: EdgeInsets.all(15),
+              child: Text(text),
+            ),
           ],
         ),
       ),

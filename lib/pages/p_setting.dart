@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../statecontrol/controller.dart';
+import '../temp/p_iap_test.dart';
 
 class SettingPage extends StatefulWidget {
   const SettingPage({Key? key}) : super(key: key);
@@ -40,10 +41,12 @@ class _SettingPageState extends State<SettingPage> {
           Expanded(
             child: ListView(
               children: [
+//------------------------------ 0 ------------------------------
                 ListTile(
                   title: Text('Dark Mode'),
                   trailing: Obx(
                     () => CupertinoSwitch(
+                      activeColor: c.themeColors[c.themeColorIndex.value],
                       value: c.darkMode.value,
                       onChanged: (v) {
                         c.darkMode.value = v;
@@ -52,10 +55,12 @@ class _SettingPageState extends State<SettingPage> {
                     ),
                   ),
                 ),
+//------------------------------ 1 ------------------------------
                 ListTile(
                   title: Text('Show Hidden Folder'),
                   trailing: Obx(
                     () => CupertinoSwitch(
+                      activeColor: c.themeColors[c.themeColorIndex.value],
                       value: c.showHiddenFiles.value,
                       onChanged: (v) {
                         c.showHiddenFiles.value = v;
@@ -64,6 +69,12 @@ class _SettingPageState extends State<SettingPage> {
                     ),
                   ),
                 ),
+//------------------------------ 2 ------------------------------
+                ListTile(
+                  title: Text('IAP'),
+                  onTap: () => c.goToPage(context, IapPurchaseTestPage()),
+                ),
+//------------------------------ 3 ------------------------------
                 ExpansionTile(
                   title: Text('Themes'),
                   children: [

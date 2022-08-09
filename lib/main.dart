@@ -104,6 +104,7 @@ class _MyAppState extends State<MyApp> {
               fontWeight: FontWeight.w100,
             ),
           ),
+          durationInSeconds: 2,
           backgroundColor:
               c.darkMode.value ? Colors.grey.shade800 : Colors.white,
           navigator: const HomePage(),
