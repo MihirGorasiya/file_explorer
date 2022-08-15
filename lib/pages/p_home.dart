@@ -5,7 +5,6 @@ import 'dart:io';
 import 'package:disk_space/disk_space.dart';
 import 'package:file_manager/pages/p_explorer.dart';
 import 'package:file_manager/pages/p_filtered_explorer.dart';
-import 'package:file_manager/pages/p_private_vault.dart';
 import 'package:file_manager/pages/p_search.dart';
 import 'package:file_manager/pages/p_setting.dart';
 import 'package:file_manager/pages/p_whatsapp.dart';
@@ -207,13 +206,17 @@ class _HomePageState extends State<HomePage> {
                         ButtonWithImage(
                           buttonIcon: Icons.download_rounded,
                           buttonDesc: "Downloads",
-                          onPressed: () => c.goToPage(
-                            context,
-                            ExplorerPage(
-                              dirPath: '/storage/emulated/0/download',
-                              isSelecting: false,
-                            ),
-                          ),
+                          onPressed: () {
+                            c.currentDirectoryPath.value =
+                                '/storage/emulated/0/download';
+                            c.goToPage(
+                              context,
+                              ExplorerPage(
+                                // dirPath: '/storage/emulated/0/download',
+                                isSelecting: false,
+                              ),
+                            );
+                          },
                         ),
                       ],
                     ),
@@ -223,13 +226,16 @@ class _HomePageState extends State<HomePage> {
               SizedBox(height: 30),
 //------------------------------ Internal Storage ------------------------------
               StorageListTile(
-                onPressed: () => c.goToPage(
-                  context,
-                  ExplorerPage(
-                    dirPath: '/storage/emulated/0',
-                    isSelecting: false,
-                  ),
-                ),
+                onPressed: () {
+                  c.currentDirectoryPath.value = '/storage/emulated/0';
+                  c.goToPage(
+                    context,
+                    ExplorerPage(
+                      // dirPath: '/storage/emulated/0',
+                      isSelecting: false,
+                    ),
+                  );
+                },
                 storageTitle: 'Internal storage',
                 storageInfo: usedSpace == 0
                     ? '00.0 GB/00.0 GB'
@@ -237,13 +243,16 @@ class _HomePageState extends State<HomePage> {
               ),
 //------------------------------ SD Card Storage ------------------------------
               StorageListTile(
-                onPressed: () => c.goToPage(
-                  context,
-                  ExplorerPage(
-                    dirPath: c.sdPath,
-                    isSelecting: false,
-                  ),
-                ),
+                onPressed: () {
+                  c.currentDirectoryPath.value = c.sdPath;
+                  c.goToPage(
+                    context,
+                    ExplorerPage(
+                      // dirPath: c.sdPath,
+                      isSelecting: false,
+                    ),
+                  );
+                },
                 storageTitle: 'SD card',
                 storageInfo: cardFreeSpace == 0
                     ? '00.0 GB Free'

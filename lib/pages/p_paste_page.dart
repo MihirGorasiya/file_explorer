@@ -84,12 +84,13 @@ class _PastePageState extends State<PastePage> {
 
     // set false transfering
     c.isTransfering.value = 0;
+    c.isSelecting.value = false;
     setState(() {
       isCopying = false;
     });
     Navigator.pop(context);
-    Navigator.pop(context);
-    c.goToPage(context, ExplorerPage(dirPath: dirPath, isSelecting: false));
+
+    c.goToPage(context, ExplorerPage(isSelecting: false));
   }
 
   @override
@@ -173,7 +174,7 @@ class _PastePageState extends State<PastePage> {
                                           ),
                                           const SizedBox(width: 10),
                                           SelectIconWidget(
-                                            isSelecting: false,
+                                            // isSelecting: false,
                                             fileName: dirList[index],
                                           ),
                                         ],

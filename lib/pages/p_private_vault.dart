@@ -14,7 +14,7 @@ class _PrivateVaultPageState extends State<PrivateVaultPage> {
       appBar: AppBar(
         title: const Text('Private Vault'),
       ),
-      body: Center(
+      body: const Center(
         child: Text('Private Vault'),
       ),
     );

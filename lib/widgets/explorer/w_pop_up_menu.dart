@@ -122,7 +122,6 @@ class PopUpMenu extends StatelessWidget {
               }
             }
 
-            //TODO: Replace Move Code
             c.isTransfering.value = 2;
             Navigator.pop(context);
             c.goToPage(
@@ -227,6 +226,12 @@ class PopUpMenu extends StatelessWidget {
               ),
             );
             break;
+          case 6:
+            //TODO: Add to Private Vault
+
+            // Check if any folder selected
+            // rename file extension to sfmpv
+            break;
           default:
         }
       },
@@ -253,6 +258,11 @@ class PopUpMenu extends StatelessWidget {
                 value: 5,
                 child: const Text('Details'),
                 onTap: () => c.getSizeDetails(),
+              ),
+              PopupMenuItem(
+                value: 6,
+                child: const Text('Add to private vault'),
+                onTap: () {},
               ),
             ]
           : <PopupMenuEntry>[

@@ -3,10 +3,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../statecontrol/controller.dart';
-import '../temp/p_iap_test.dart';
+import '../utils/file_handler.dart';
+import 'p_subscription.dart';
 
 class SettingPage extends StatefulWidget {
   const SettingPage({Key? key}) : super(key: key);
@@ -19,18 +19,6 @@ class _SettingPageState extends State<SettingPage> {
   final Controller c = Get.find();
 
   // TextStyle tStyle = const TextStyle(color: c.themeColors[c.themeColorIndex.value], fontSize: 17);
-
-  late SharedPreferences prefs;
-
-  @override
-  void initState() {
-    getSharedPreference();
-    super.initState();
-  }
-
-  void getSharedPreference() async {
-    prefs = await SharedPreferences.getInstance();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +38,7 @@ class _SettingPageState extends State<SettingPage> {
                       value: c.darkMode.value,
                       onChanged: (v) {
                         c.darkMode.value = v;
-                        prefs.setBool('darkMode', v);
+                        FileHandler().saveData();
                       },
                     ),
                   ),
@@ -64,19 +52,45 @@ class _SettingPageState extends State<SettingPage> {
                       value: c.showHiddenFiles.value,
                       onChanged: (v) {
                         c.showHiddenFiles.value = v;
-                        prefs.setBool('showHiddenFiles', v);
+                        FileHandler().saveData();
                       },
                     ),
                   ),
                 ),
 //------------------------------ 2 ------------------------------
                 ListTile(
-                  title: Text('IAP'),
-                  onTap: () => c.goToPage(context, IapPurchaseTestPage()),
+                  title: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text('Become Premium'),
+                      SizedBox(
+                        width: 20,
+                      ),
+                      Icon(
+                        Icons.star_rate_rounded,
+                        size: 25,
+                        color: c.themeColors[c.themeColorIndex.value],
+                      ),
+                    ],
+                  ),
+                  onTap: () => c.goToPage(context, SubscriptionPage()),
                 ),
 //------------------------------ 3 ------------------------------
                 ExpansionTile(
-                  title: Text('Themes'),
+                  title: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text('Themes'),
+                      SizedBox(
+                        width: 20,
+                      ),
+                      Icon(
+                        Icons.star_rate_rounded,
+                        size: 25,
+                        color: c.themeColors[c.themeColorIndex.value],
+                      ),
+                    ],
+                  ),
                   children: [
                     SizedBox(
                       height: 100,
@@ -96,7 +110,7 @@ class _SettingPageState extends State<SettingPage> {
                             return InkWell(
                               onTap: () {
                                 c.themeColorIndex.value = index;
-                                prefs.setInt('themeColorIndex', index);
+                                FileHandler().saveData();
                               },
                               child: Container(
                                 decoration: BoxDecoration(
@@ -114,8 +128,10 @@ class _SettingPageState extends State<SettingPage> {
               ],
             ),
           ),
-          Center(
-            child: Text('Beta Version'),
+          Obx(
+            () => Center(
+              child: Text('Beta Version\n Premium: ${c.isPremium.value}'),
+            ),
           ),
           SizedBox(
             height: 25,

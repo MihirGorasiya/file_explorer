@@ -1,22 +1,24 @@
 //ignore_for_file: prefer_const_literals_to_create_immutables, use_build_context_synchronously
 import 'dart:io';
 
+import 'package:file_manager/pages/w_select_icon.dart';
 import 'package:file_manager/statecontrol/controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:open_file/open_file.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-import '../widgets/explorer/w_file_list_view.dart';
+import '../widgets/explorer/w_file_icon.dart';
 import '../widgets/explorer/w_file_not_found_icon.dart';
 import '../widgets/explorer/w_pop_up_menu.dart';
 
 class ExplorerPage extends StatefulWidget {
   const ExplorerPage({
     Key? key,
-    required this.dirPath,
+    // required this.dirPath,
     required this.isSelecting,
   }) : super(key: key);
-  final String dirPath;
+  // final String dirPath;
   final bool isSelecting;
   @override
   State<ExplorerPage> createState() => _ExplorerPageState();
@@ -39,13 +41,18 @@ class _ExplorerPageState extends State<ExplorerPage> {
   }
 
   void getChildDirList() async {
-    childDirList.clear();
+    setState(() {
+      childDirList.clear();
+      childfileList.clear();
+    });
     c.statusString.value = 'Searching For Files';
     List<String> tempList;
 
     // Get all Dir List
-    tempList =
-        await Directory(widget.dirPath).list().map((e) => e.path).toList();
+    tempList = await Directory(c.currentDirectoryPath.value)
+        .list()
+        .map((e) => e.path)
+        .toList();
 
     // if showHiddenFile is enabled
     if (!c.showHiddenFiles.value) {
@@ -64,14 +71,18 @@ class _ExplorerPageState extends State<ExplorerPage> {
 
     // filter files and folder
     for (int i = 0; i < tempList.length; i++) {
-      if (tempList[i].split('/').last.startsWith('.') &&
-          !c.showHiddenFiles.value) {
+      if (tempList[i].endsWith('.sfmpv')) {
         tempList.removeAt(i);
       } else {
-        if (c.isFile(tempList[i])) {
-          childfileList.add(tempList[i]);
+        if (tempList[i].split('/').last.startsWith('.') &&
+            !c.showHiddenFiles.value) {
+          tempList.removeAt(i);
         } else {
-          childDirList.add(tempList[i]);
+          if (c.isFile(tempList[i])) {
+            childfileList.add(tempList[i]);
+          } else {
+            childDirList.add(tempList[i]);
+          }
         }
       }
     }
@@ -87,8 +98,8 @@ class _ExplorerPageState extends State<ExplorerPage> {
   }
 
   void setCurrentDirName() {
-    currentDir =
-        widget.dirPath.split('/')[widget.dirPath.split('/').length - 1];
+    currentDir = c.currentDirectoryPath.value
+        .split('/')[c.currentDirectoryPath.value.split('/').length - 1];
 
     if (currentDir == "0") {
       currentDir = "Internal Storage";
@@ -104,10 +115,11 @@ class _ExplorerPageState extends State<ExplorerPage> {
     var folderName = textController.text;
     if (folderName.isEmpty) {
       c.createErrorMessage.value = 'Enter Folder Name!';
-    } else if (Directory('${widget.dirPath}/$folderName').existsSync()) {
+    } else if (Directory('${c.currentDirectoryPath.value}/$folderName')
+        .existsSync()) {
       c.createErrorMessage.value = 'Folder Already exists!';
     } else {
-      await Directory('${widget.dirPath}/$folderName').create();
+      await Directory('${c.currentDirectoryPath.value}/$folderName').create();
       getChildDirList();
       Navigator.pop(context);
     }
@@ -131,13 +143,15 @@ class _ExplorerPageState extends State<ExplorerPage> {
         }
       }
     }
+    c.isSelecting.value = !c.isSelecting.value;
+    getChildDirList();
     Navigator.pop(context);
-    Navigator.pop(context);
-    Navigator.pop(context);
-    c.goToPage(
-      context,
-      ExplorerPage(dirPath: widget.dirPath, isSelecting: false),
-    );
+    // Navigator.pop(context);
+    // Navigator.pop(context);
+    // c.goToPage(
+    //   context,
+    //   ExplorerPage(dirPath: widget.dirPath, isSelecting: false),
+    // );
   }
 
   void onRenamePressed() async {
@@ -152,12 +166,17 @@ class _ExplorerPageState extends State<ExplorerPage> {
       Directory(c.selectedItem[0]).rename('$parentPath/$newName');
     }
     Navigator.pop(context);
-    Navigator.pop(context);
-    Navigator.pop(context);
-    c.goToPage(
-      context,
-      ExplorerPage(dirPath: widget.dirPath, isSelecting: false),
-    );
+    // Navigator.pop(context);
+    // Navigator.pop(context);
+    // c.goToPage(
+    //   context,
+    //   ExplorerPage(dirPath: widget.dirPath, isSelecting: false),
+    // );
+  }
+
+  void resetCurDirPath(String newPath) {
+    c.currentDirectoryPath.value = newPath;
+    getChildDirList();
   }
 
   @override
@@ -170,59 +189,145 @@ class _ExplorerPageState extends State<ExplorerPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(currentDir),
-        actions: [
-          SizedBox(
-            child: widget.isSelecting
-                ? CircleAvatar(
-                    backgroundColor: Colors.black38,
-                    foregroundColor: c.themeColors[c.themeColorIndex.value],
-                    child: Obx(
-                      () => Text(
-                        c.selectedItem.length.toString(),
-                        style: const TextStyle(fontSize: 20),
-                      ),
-                    ),
-                  )
-                : null,
+    return WillPopScope(
+      onWillPop: () {
+        if (c.isSelecting.value) {
+          c.isSelecting.value = !c.isSelecting.value;
+          return Future.value(false);
+        } else {
+          if (c.currentDirectoryPath.value != '/storage/emulated/0' &&
+              c.currentDirectoryPath.value != c.sdPath) {
+            resetCurDirPath(
+                Directory(c.currentDirectoryPath.value).parent.path);
+            return Future.value(false);
+          } else {
+            return Future.value(true);
+          }
+        }
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          title: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(currentDir),
+              const SizedBox(width: 20),
+              Icon(
+                Icons.star_rate_rounded,
+                size: 25,
+                color: c.themeColors[c.themeColorIndex.value],
+              ),
+            ],
           ),
-          PopUpMenu(
-            isSelecting: widget.isSelecting,
-            textController: textController,
-            errorMsg: createFolderError,
-            onCreatePressed: onFolderCreate,
-            onRenamePressed: onRenamePressed,
-            onDeletePressed: onDeletePressed,
-          ),
-        ],
-      ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 12.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
+          actions: [
             SizedBox(
-              height: 23,
-              child: SingleChildScrollView(
-                reverse: true,
-                scrollDirection: Axis.horizontal,
-                child: Text(
-                  widget.dirPath,
-                ),
+              child: widget.isSelecting
+                  ? CircleAvatar(
+                      backgroundColor: Colors.black38,
+                      foregroundColor: c.themeColors[c.themeColorIndex.value],
+                      child: Obx(
+                        () => Text(
+                          c.selectedItem.length.toString(),
+                          style: const TextStyle(fontSize: 20),
+                        ),
+                      ),
+                    )
+                  : null,
+            ),
+            Obx(
+              () => PopUpMenu(
+                isSelecting: c.isSelecting.value,
+                textController: textController,
+                errorMsg: createFolderError,
+                onCreatePressed: onFolderCreate,
+                onRenamePressed: onRenamePressed,
+                onDeletePressed: onDeletePressed,
               ),
             ),
-            Expanded(
-              child: childDirList.isNotEmpty
-                  ? FileListView(
-                      curDirPath: widget.dirPath,
-                      childDirList: childDirList,
-                      isSelecting: widget.isSelecting,
-                    )
-                  : const FileNotFoundIcon(),
-            )
           ],
+        ),
+        body: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 12.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(
+                height: 23,
+                child: SingleChildScrollView(
+                  reverse: true,
+                  scrollDirection: Axis.horizontal,
+                  child: Text(
+                    c.currentDirectoryPath.value,
+                  ),
+                ),
+              ),
+              // Expanded(
+              //   child: childDirList.isNotEmpty
+              //       ? FileListView(
+              //           curDirPath: widget.dirPath,
+              //           childDirList: childDirList,
+              //           isSelecting: widget.isSelecting,
+              //         )
+              //       : const FileNotFoundIcon(),
+              // ),
+              Expanded(
+                child: childDirList.isNotEmpty
+                    ? ListView.builder(
+                        itemCount: childDirList.length,
+                        itemBuilder: (context, index) {
+                          return Obx(
+                            () => ListTile(
+                              onTap: () {
+                                // selection is on
+                                if (c.isSelecting.value) {
+                                  if (c.selectedItem
+                                      .contains(childDirList[index])) {
+                                    c.selectedItem.remove(childDirList[index]);
+                                  } else {
+                                    c.selectedItem.add(childDirList[index]);
+                                  }
+                                }
+                                // selection is off
+                                else {
+                                  if (!c.isFile(childDirList[index])) {
+                                    resetCurDirPath(childDirList[index]);
+                                  } else {
+                                    OpenFile.open(childDirList[index]);
+                                  }
+                                }
+                              },
+                              onLongPress: () {
+                                if (!c.isSelecting.value) {
+                                  c.selectedItem.clear();
+                                  c.selectedItem.add(childDirList[index]);
+
+                                  c.isSelecting.value = true;
+                                }
+                              },
+                              contentPadding: const EdgeInsets.symmetric(
+                                horizontal: 0,
+                                vertical: 3,
+                              ),
+                              leading:
+                                  FileIconWidget(fileName: childDirList[index]),
+                              title: Text(
+                                childDirList[index].split('/').last,
+                                maxLines: 1,
+                              ),
+                              trailing: SizedBox(
+                                child: c.isSelecting.value
+                                    ? SelectIconWidget(
+                                        fileName: childDirList[index])
+                                    : null,
+                              ),
+                            ),
+                          );
+                        },
+                      )
+                    : const FileNotFoundIcon(),
+              ),
+            ],
+          ),
         ),
       ),
     );

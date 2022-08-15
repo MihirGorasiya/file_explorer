@@ -1,16 +1,21 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:easy_splash_screen/easy_splash_screen.dart';
+import 'package:file_manager/utils/purchase_api.dart';
+import 'package:file_manager/utils/file_handler.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import 'pages/p_home.dart';
 import 'statecontrol/controller.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  await PurchaseApi.init();
+
   runApp(MyApp());
 }
 
@@ -23,28 +28,12 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   final Controller c = Get.put(Controller());
-  late SharedPreferences prefs;
 
   @override
   void initState() {
-    getSharedPreference();
+    PurchaseApi().getPurchasesStatus();
+    FileHandler().retriveData();
     super.initState();
-  }
-
-  void getSharedPreference() async {
-    prefs = await SharedPreferences.getInstance();
-    if (prefs.getBool('darkMode') == null) {
-      prefs.setBool('darkMode', true);
-    }
-    if (prefs.getBool('showHiddenFiles') == null) {
-      prefs.setBool('showHiddenFiles', false);
-    }
-    if (prefs.getInt('themeColorIndex') == null) {
-      prefs.setInt('themeColorIndex', 0);
-    }
-    c.darkMode.value = prefs.getBool('darkMode')!;
-    c.showHiddenFiles.value = prefs.getBool('showHiddenFiles')!;
-    c.themeColorIndex.value = prefs.getInt('themeColorIndex')!;
   }
 
   @override
@@ -53,7 +42,7 @@ class _MyAppState extends State<MyApp> {
     return Obx(
       () => MaterialApp(
         debugShowCheckedModeBanner: false,
-        title: 'Flutter Demo',
+        title: 'Slavia - File Manager',
         themeMode: c.darkMode.value ? ThemeMode.dark : ThemeMode.light,
         theme: ThemeData(
           fontFamily: GoogleFonts.baloo2().fontFamily,

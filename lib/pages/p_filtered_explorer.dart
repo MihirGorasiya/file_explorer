@@ -21,7 +21,6 @@ class FilteredExplorerPage extends StatefulWidget {
 }
 
 class _FilteredExplorerPageState extends State<FilteredExplorerPage> {
-
   final Controller c = Get.find();
   List<String> allRootDirPathList = [];
   List<String> childDirList = [];
@@ -121,33 +120,36 @@ class _FilteredExplorerPageState extends State<FilteredExplorerPage> {
     return Scaffold(
       appBar: AppBar(title: Text(widget.fileType)),
       body: childDirList.isNotEmpty
-          ? ListView.builder(
-              itemCount: childDirList.length,
-              itemBuilder: (context, index) {
-                return Container(
-                  margin: const EdgeInsets.only(top: 10),
-                  padding: const EdgeInsets.symmetric(vertical: 5),
-                  // color: Colors.grey[800],
-                  child: InkWell(
-                    onTap: () => c.onOpenFile(childDirList[index]),
-                    child: Row(
-                      children: [
-                        FileIconWidget(fileName: childDirList[index]),
-                        const SizedBox(width: 10),
-                        FileNameWidget(
-                          isSelecting: false,
-                          fileName: childDirList[index].split('/').last,
-                        ),
-                        const SizedBox(width: 10),
-                        SelectIconWidget(
-                          isSelecting: false,
-                          fileName: childDirList[index],
-                        ),
-                      ],
+          ? Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 12.0),
+              child: ListView.builder(
+                itemCount: childDirList.length,
+                itemBuilder: (context, index) {
+                  return Container(
+                    margin: const EdgeInsets.only(top: 10),
+                    padding: const EdgeInsets.symmetric(vertical: 5),
+                    // color: Colors.grey[800],
+                    child: InkWell(
+                      onTap: () => c.onOpenFile(childDirList[index]),
+                      child: Row(
+                        children: [
+                          FileIconWidget(fileName: childDirList[index]),
+                          const SizedBox(width: 10),
+                          FileNameWidget(
+                            isSelecting: false,
+                            fileName: childDirList[index].split('/').last,
+                          ),
+                          const SizedBox(width: 10),
+                          SelectIconWidget(
+                            // isSelecting: false,
+                            fileName: childDirList[index],
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                );
-              },
+                  );
+                },
+              ),
             )
           : const FileNotFoundIcon(),
     );

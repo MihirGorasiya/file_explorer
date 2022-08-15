@@ -35,8 +35,8 @@ class FileListView extends StatelessWidget {
         if (Directory(childDirList[index]).existsSync()) {
           c.goToPage(
             context,
-            ExplorerPage(
-              dirPath: childDirList[index],
+            const ExplorerPage(
+              // dirPath: childDirList[index],
               isSelecting: false,
             ),
           );
@@ -50,12 +50,12 @@ class FileListView extends StatelessWidget {
       if (!isSelecting) {
         c.selectedItem.clear();
         c.selectedItem.add(childDirList[index]);
-
+        c.currentDirectoryPath.value = curDirPath;
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => ExplorerPage(
-              dirPath: curDirPath,
+            builder: (context) => const ExplorerPage(
+              // dirPath: curDirPath,
               isSelecting: true,
             ),
           ),
@@ -83,7 +83,6 @@ class FileListView extends StatelessWidget {
                 ),
                 const SizedBox(width: 10),
                 SelectIconWidget(
-                  isSelecting: isSelecting,
                   fileName: childDirList[index],
                 ),
               ],

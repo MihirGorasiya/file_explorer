@@ -12,10 +12,12 @@ class Controller extends GetxController {
   var cutDestPath = ''.obs;
   var statusString = 'Searching For Files'.obs;
   var sizeDetails = '0'.obs;
+  var currentDirectoryPath = ''.obs;
 
   // -------------------- Bool --------------------
-  // TODO: Add bool for premium check
   var isTransfering = 0.obs;
+  var isPremium = false.obs;
+  var isSelecting = false.obs;
   var darkMode = true.obs;
   var showHiddenFiles = true.obs;
   var safeDelete = false.obs;
