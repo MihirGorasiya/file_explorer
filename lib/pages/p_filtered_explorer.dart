@@ -120,36 +120,29 @@ class _FilteredExplorerPageState extends State<FilteredExplorerPage> {
     return Scaffold(
       appBar: AppBar(title: Text(widget.fileType)),
       body: childDirList.isNotEmpty
-          ? Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 12.0),
-              child: ListView.builder(
-                itemCount: childDirList.length,
-                itemBuilder: (context, index) {
-                  return Container(
-                    margin: const EdgeInsets.only(top: 10),
-                    padding: const EdgeInsets.symmetric(vertical: 5),
-                    // color: Colors.grey[800],
-                    child: InkWell(
-                      onTap: () => c.onOpenFile(childDirList[index]),
-                      child: Row(
-                        children: [
-                          FileIconWidget(fileName: childDirList[index]),
-                          const SizedBox(width: 10),
-                          FileNameWidget(
-                            isSelecting: false,
-                            fileName: childDirList[index].split('/').last,
-                          ),
-                          const SizedBox(width: 10),
-                          SelectIconWidget(
-                            // isSelecting: false,
-                            fileName: childDirList[index],
-                          ),
-                        ],
-                      ),
+          ? ListView.builder(
+              itemCount: childDirList.length,
+              itemBuilder: (context, index) {
+                return Obx(
+                  () => ListTile(
+                    onTap: () => c.onOpenFile(childDirList[index]),
+                    contentPadding: const EdgeInsets.symmetric(
+                      horizontal: 0,
+                      vertical: 3,
                     ),
-                  );
-                },
-              ),
+                    leading: FileIconWidget(fileName: childDirList[index]),
+                    title: Text(
+                      childDirList[index].split('/').last,
+                      maxLines: 1,
+                    ),
+                    trailing: SizedBox(
+                      child: c.isSelecting.value
+                          ? SelectIconWidget(fileName: childDirList[index])
+                          : null,
+                    ),
+                  ),
+                );
+              },
             )
           : const FileNotFoundIcon(),
     );

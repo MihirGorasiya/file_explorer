@@ -39,7 +39,7 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
         title: Text('IAP Test'),
       ),
       floatingActionButton: FloatingActionButton(onPressed: () {
-        PurchaseApi().getPurchasesStatus();
+        PurchaseApi().updateCustomerStatus();
       }),
       body: products.isNotEmpty
           ? ListView.builder(

@@ -16,8 +16,8 @@ class FileNameWidget extends StatelessWidget {
       // color: Colors.purple,
       height: 45,
       width: isSelecting
-          ? MediaQuery.of(context).size.width * 0.69
-          : MediaQuery.of(context).size.width * 0.77,
+          ? MediaQuery.of(context).size.width * 0.65
+          : MediaQuery.of(context).size.width * 0.72,
       child: Text(
         fileName,
         overflow: TextOverflow.ellipsis,

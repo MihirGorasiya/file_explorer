@@ -9,9 +9,20 @@ class PurchaseApi {
   final Controller c = Get.find();
   static const _apiKey = 'goog_rYnmVZFoKWxoUYAyQaHzkMYEMZQ';
 
-  static Future init() async {
+  Future init() async {
     await Purchases.setDebugLogsEnabled(true);
     await Purchases.setup(_apiKey);
+
+    Purchases.addCustomerInfoUpdateListener(
+      (_) => updateCustomerStatus(),
+    );
+  }
+
+  Future updateCustomerStatus() async {
+    final customerInfo = await Purchases.getCustomerInfo();
+
+    final entitlement = customerInfo.entitlements.active['all_access'];
+    c.isPremium.value = entitlement != null;
   }
 
   static Future<List<Offering>> fetchOffers() async {
@@ -25,20 +36,18 @@ class PurchaseApi {
     try {
       await Purchases.purchasePackage(package);
     } catch (_) {}
-    getPurchasesStatus();
+    // getPurchasesStatus();
   }
 
-  void getPurchasesStatus() async {
-    try {
-      CustomerInfo customerInfo = await Purchases.getCustomerInfo();
+  // void getPurchasesStatus() async {
+  //   try {
+  //     CustomerInfo customerInfo = await Purchases.getCustomerInfo();
 
-      if (customerInfo.entitlements.active.isNotEmpty) {
-        c.isPremium.value = true;
-      } else {
-        c.isPremium.value = false;
-      }
-
-      // print('isPremium: ${c.isPremium.value}');
-    } catch (_) {}
-  }
+  //     if (customerInfo.entitlements.active.isNotEmpty) {
+  //       c.isPremium.value = true;
+  //     } else {
+  //       c.isPremium.value = false;
+  //     }
+  //   } catch (_) {}
+  // }
 }

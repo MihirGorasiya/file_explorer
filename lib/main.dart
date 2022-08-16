@@ -13,8 +13,8 @@ import 'statecontrol/controller.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
-  await PurchaseApi.init();
+  final Controller c = Get.put(Controller());
+  await PurchaseApi().init();
 
   runApp(MyApp());
 }
@@ -27,11 +27,10 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  final Controller c = Get.put(Controller());
-
+  final Controller c = Get.find();
   @override
   void initState() {
-    PurchaseApi().getPurchasesStatus();
+    // PurchaseApi().getPurchasesStatus();
     FileHandler().retriveData();
     super.initState();
   }
@@ -81,7 +80,7 @@ class _MyAppState extends State<MyApp> {
             style: TextStyle(
               fontSize: 25,
               fontWeight: FontWeight.bold,
-              color: c.themeColors[c.themeColorIndex.value],
+              color: Colors.amber,
             ),
           ),
           showLoader: false,
@@ -89,13 +88,12 @@ class _MyAppState extends State<MyApp> {
             'Beta Version',
             style: TextStyle(
               fontSize: 15,
-              color: c.themeColors[c.themeColorIndex.value],
+              color: Colors.amber,
               fontWeight: FontWeight.w100,
             ),
           ),
           durationInSeconds: 2,
-          backgroundColor:
-              c.darkMode.value ? Colors.grey.shade800 : Colors.white,
+          backgroundColor: Colors.grey.shade800,
           navigator: const HomePage(),
           // navigator: const IapPurchaseTestPage(),
         ),

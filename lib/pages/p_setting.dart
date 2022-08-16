@@ -167,7 +167,10 @@ class _SettingPageState extends State<SettingPage> {
           ),
           Obx(
             () => Center(
-              child: Text('Beta Version\n Premium: ${c.isPremium.value}'),
+              child: Text(
+                'Beta Version\n ${c.isPremium.value ? 'You are premium member.' : 'You are not a premium member.'}',
+                textAlign: TextAlign.center,
+              ),
             ),
           ),
           SizedBox(
