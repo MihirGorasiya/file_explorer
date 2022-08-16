@@ -16,6 +16,7 @@ class PopUpMenu extends StatelessWidget {
     required this.isSelecting,
     required this.onDeletePressed,
     required this.onRenamePressed,
+    required this.updateFileList,
   }) : super(key: key);
 
   final TextEditingController textController;
@@ -24,6 +25,7 @@ class PopUpMenu extends StatelessWidget {
   final VoidCallback onCreatePressed;
   final VoidCallback onRenamePressed;
   final VoidCallback onDeletePressed;
+  final VoidCallback updateFileList;
 
   @override
   Widget build(BuildContext context) {
@@ -206,11 +208,11 @@ class PopUpMenu extends StatelessWidget {
                 c: c,
                 actionText: "Ok",
                 actionCallBack: () {
-                  onCancelPressed();
+                  c.isSelecting.value = false;
                   onCancelPressed();
                 },
                 onCancelPressed: () {
-                  onCancelPressed();
+                  c.isSelecting.value = false;
                   onCancelPressed();
                 },
                 content: Column(
@@ -227,10 +229,17 @@ class PopUpMenu extends StatelessWidget {
             );
             break;
           case 6:
-            //TODO: Add to Private Vault
+            for (int i = 0; i < c.selectedItem.length; i++) {
+              if (!c.isFile(c.selectedItem[i])) {
+                continue;
+              } else {
+                File(c.selectedItem[i])
+                    .renameSync('${c.selectedItem[i]}.sfmpv');
+                c.isSelecting.value = false;
+              }
+            }
+            updateFileList();
 
-            // Check if any folder selected
-            // rename file extension to sfmpv
             break;
           default:
         }

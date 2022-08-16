@@ -41,6 +41,7 @@ class _PastePageState extends State<PastePage> {
   }
 
   void pasteCopiedFiles() async {
+    // TODO: handle on cancel copy & turn off selecting
     setState(() {
       isCopying = true;
     });

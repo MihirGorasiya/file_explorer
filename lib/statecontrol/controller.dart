@@ -91,7 +91,7 @@ class Controller extends GetxController {
     sizeDetails.value = filesize(totalSize);
   }
 
-  void onOpenFile(String filePath) {
-    OpenFile.open(filePath);
+  void onOpenFile(String filePath) async {
+    await OpenFile.open(filePath);
   }
 }

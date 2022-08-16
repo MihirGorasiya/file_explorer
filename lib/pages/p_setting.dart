@@ -1,11 +1,14 @@
-// ignore_for_file: prefer_const_constructors
+// ignore_for_file: prefer_const_constructors, use_build_context_synchronously
 
+import 'package:file_manager/pages/p_private_vault.dart';
+import 'package:file_manager/utils/fuction_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../statecontrol/controller.dart';
 import '../utils/file_handler.dart';
+import '../widgets/w_premium_star.dart';
 import 'p_subscription.dart';
 
 class SettingPage extends StatefulWidget {
@@ -62,20 +65,49 @@ class _SettingPageState extends State<SettingPage> {
                   title: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
+                      Text('Private Vault'),
+                      SizedBox(
+                        width: 20,
+                      ),
+                      PremiumStarWidget(c: c),
+                    ],
+                  ),
+                  onTap: () async {
+                    if (c.isPremium.value) {
+                      bool isVerified = await FuctionStorage().authenticate();
+                      if (isVerified) {
+                        c.goToPage(context, PrivateVaultPage());
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text('You are not authorised person.'),
+                          ),
+                        );
+                      }
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('You are not a premium member.'),
+                        ),
+                      );
+                    }
+                  },
+                ),
+//------------------------------ 3 ------------------------------
+                ListTile(
+                  title: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
                       Text('Become Premium'),
                       SizedBox(
                         width: 20,
                       ),
-                      Icon(
-                        Icons.star_rate_rounded,
-                        size: 25,
-                        color: c.themeColors[c.themeColorIndex.value],
-                      ),
+                      PremiumStarWidget(c: c),
                     ],
                   ),
                   onTap: () => c.goToPage(context, SubscriptionPage()),
                 ),
-//------------------------------ 3 ------------------------------
+//------------------------------ 4 ------------------------------
                 ExpansionTile(
                   title: Row(
                     mainAxisSize: MainAxisSize.min,
@@ -84,11 +116,7 @@ class _SettingPageState extends State<SettingPage> {
                       SizedBox(
                         width: 20,
                       ),
-                      Icon(
-                        Icons.star_rate_rounded,
-                        size: 25,
-                        color: c.themeColors[c.themeColorIndex.value],
-                      ),
+                      PremiumStarWidget(c: c),
                     ],
                   ),
                   children: [
@@ -109,8 +137,17 @@ class _SettingPageState extends State<SettingPage> {
                           itemBuilder: (context, index) {
                             return InkWell(
                               onTap: () {
-                                c.themeColorIndex.value = index;
-                                FileHandler().saveData();
+                                if (c.isPremium.value) {
+                                  c.themeColorIndex.value = index;
+                                  FileHandler().saveData();
+                                } else {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content:
+                                          Text('You are not a premium member.'),
+                                    ),
+                                  );
+                                }
                               },
                               child: Container(
                                 decoration: BoxDecoration(
@@ -141,6 +178,8 @@ class _SettingPageState extends State<SettingPage> {
     );
   }
 }
+
+
 
 // Padding(
 // padding: const EdgeInsets.all(20.0),

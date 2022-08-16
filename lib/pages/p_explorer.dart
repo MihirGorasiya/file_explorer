@@ -1,13 +1,12 @@
-//ignore_for_file: prefer_const_literals_to_create_immutables, use_build_context_synchronously
+//ignore_for_file: prefer_const_literals_to_create_immutables, use_build_context_synchronously, unused_local_variable
 import 'dart:io';
 
 import 'package:file_manager/pages/w_select_icon.dart';
-import 'package:file_manager/statecontrol/controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:open_file/open_file.dart';
 import 'package:permission_handler/permission_handler.dart';
 
+import '../statecontrol/controller.dart';
 import '../widgets/explorer/w_file_icon.dart';
 import '../widgets/explorer/w_file_not_found_icon.dart';
 import '../widgets/explorer/w_pop_up_menu.dart';
@@ -41,10 +40,13 @@ class _ExplorerPageState extends State<ExplorerPage> {
   }
 
   void getChildDirList() async {
+    childDirList.clear();
     setState(() {
       childDirList.clear();
       childfileList.clear();
     });
+
+    print(childDirList.length);
     c.statusString.value = 'Searching For Files';
     List<String> tempList;
 
@@ -71,18 +73,23 @@ class _ExplorerPageState extends State<ExplorerPage> {
 
     // filter files and folder
     for (int i = 0; i < tempList.length; i++) {
-      if (tempList[i].endsWith('.sfmpv')) {
+      if (tempList[i].split('/').last.startsWith('.') &&
+          !c.showHiddenFiles.value) {
         tempList.removeAt(i);
+      } else if (tempList[i].endsWith('.sfmpv')) {
+        /*
+        // remove all files from private vault
+        List<String> a = tempList[i].split('.');
+        a.removeLast();
+        String newPath = a.join('.');
+        File(tempList[i]).rename(newPath);
+        */
+        continue;
       } else {
-        if (tempList[i].split('/').last.startsWith('.') &&
-            !c.showHiddenFiles.value) {
-          tempList.removeAt(i);
+        if (c.isFile(tempList[i])) {
+          childfileList.add(tempList[i]);
         } else {
-          if (c.isFile(tempList[i])) {
-            childfileList.add(tempList[i]);
-          } else {
-            childDirList.add(tempList[i]);
-          }
+          childDirList.add(tempList[i]);
         }
       }
     }
@@ -93,6 +100,7 @@ class _ExplorerPageState extends State<ExplorerPage> {
       childDirList.add(childfileList[i]);
     }
 
+    print(childDirList.length);
     setState(() {});
     c.statusString.value = 'No File Found !';
   }
@@ -146,12 +154,6 @@ class _ExplorerPageState extends State<ExplorerPage> {
     c.isSelecting.value = !c.isSelecting.value;
     getChildDirList();
     Navigator.pop(context);
-    // Navigator.pop(context);
-    // Navigator.pop(context);
-    // c.goToPage(
-    //   context,
-    //   ExplorerPage(dirPath: widget.dirPath, isSelecting: false),
-    // );
   }
 
   void onRenamePressed() async {
@@ -165,13 +167,10 @@ class _ExplorerPageState extends State<ExplorerPage> {
       var parentPath = Directory(c.selectedItem[0]).parent.path;
       Directory(c.selectedItem[0]).rename('$parentPath/$newName');
     }
+
+    c.isSelecting.value = false;
+    getChildDirList();
     Navigator.pop(context);
-    // Navigator.pop(context);
-    // Navigator.pop(context);
-    // c.goToPage(
-    //   context,
-    //   ExplorerPage(dirPath: widget.dirPath, isSelecting: false),
-    // );
   }
 
   void resetCurDirPath(String newPath) {
@@ -207,18 +206,7 @@ class _ExplorerPageState extends State<ExplorerPage> {
       },
       child: Scaffold(
         appBar: AppBar(
-          title: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(currentDir),
-              const SizedBox(width: 20),
-              Icon(
-                Icons.star_rate_rounded,
-                size: 25,
-                color: c.themeColors[c.themeColorIndex.value],
-              ),
-            ],
-          ),
+          title: Text(currentDir),
           actions: [
             SizedBox(
               child: widget.isSelecting
@@ -242,6 +230,7 @@ class _ExplorerPageState extends State<ExplorerPage> {
                 onCreatePressed: onFolderCreate,
                 onRenamePressed: onRenamePressed,
                 onDeletePressed: onDeletePressed,
+                updateFileList: getChildDirList,
               ),
             ),
           ],
@@ -277,7 +266,7 @@ class _ExplorerPageState extends State<ExplorerPage> {
                         itemBuilder: (context, index) {
                           return Obx(
                             () => ListTile(
-                              onTap: () {
+                              onTap: () async {
                                 // selection is on
                                 if (c.isSelecting.value) {
                                   if (c.selectedItem
@@ -292,7 +281,7 @@ class _ExplorerPageState extends State<ExplorerPage> {
                                   if (!c.isFile(childDirList[index])) {
                                     resetCurDirPath(childDirList[index]);
                                   } else {
-                                    OpenFile.open(childDirList[index]);
+                                    c.onOpenFile(childDirList[index]);
                                   }
                                 }
                               },

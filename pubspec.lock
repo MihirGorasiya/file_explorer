@@ -192,7 +192,7 @@ packages:
       name: local_auth
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.1.1"
+    version: "2.1.2"
   local_auth_android:
     dependency: transitive
     description:
