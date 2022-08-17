@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:file_manager/pages/p_paste_page.dart';
 import 'package:file_manager/widgets/explorer/w_plain_text.dart';
+import 'package:file_manager/widgets/w_premium_star.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -270,8 +271,18 @@ class PopUpMenu extends StatelessWidget {
               ),
               PopupMenuItem(
                 value: 6,
-                child: const Text('Add to private vault'),
-                onTap: () {},
+                enabled: c.isPremium.value,
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    const Text('Add to private vault'),
+                    const SizedBox(width: 5),
+                    PremiumStarWidget(
+                      c: c,
+                      size: 20,
+                    ),
+                  ],
+                ),
               ),
             ]
           : <PopupMenuEntry>[

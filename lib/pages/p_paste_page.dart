@@ -2,14 +2,12 @@
 
 import 'dart:io';
 
-import 'package:file_manager/pages/p_explorer.dart';
-import 'package:file_manager/pages/w_select_icon.dart';
-import 'package:file_manager/statecontrol/controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../statecontrol/controller.dart';
+import 'p_explorer.dart';
 import '../widgets/explorer/w_file_icon.dart';
-import '../widgets/explorer/w_file_name_widget.dart';
 import '../widgets/explorer/w_plain_text.dart';
 
 class PastePage extends StatefulWidget {
@@ -41,7 +39,6 @@ class _PastePageState extends State<PastePage> {
   }
 
   void pasteCopiedFiles() async {
-    // TODO: handle on cancel copy & turn off selecting
     setState(() {
       isCopying = true;
     });
@@ -110,7 +107,12 @@ class _PastePageState extends State<PastePage> {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () {
-        if (dirPath != storagePath[0] && dirPath != storagePath[1]) {
+        if (dirPath == '/') {
+          dirPath = '';
+          setState(() {});
+        } else if (dirPath != storagePath[0] &&
+            dirPath != storagePath[1] &&
+            dirPath.length > 1) {
           List<String> temp;
           temp = dirPath.split('/');
           temp.removeLast();
@@ -119,6 +121,10 @@ class _PastePageState extends State<PastePage> {
         } else if (dirPath != storagePath[0] || dirPath != storagePath[1]) {
           dirPath = '/';
           setState(() {});
+        }
+
+        if (dirPath.isEmpty) {
+          c.isSelecting.value = false;
         }
 
         return Future.value(dirPath.isEmpty);
@@ -147,47 +153,26 @@ class _PastePageState extends State<PastePage> {
                       ),
 //  =========================================== Directory List ===========================================
                       Expanded(
-                        child: (dirList.isNotEmpty
+                        child: dirList.isNotEmpty
                             ? ListView.builder(
                                 itemCount: dirList.length,
                                 itemBuilder: (context, index) {
-                                  return Container(
-                                    margin: const EdgeInsets.only(top: 10),
-                                    padding:
-                                        const EdgeInsets.symmetric(vertical: 5),
-                                    // color: Colors.grey[800],
-                                    child: InkWell(
-                                      onTap: () {
-                                        dirPath = dirList[index];
-                                        getDirList();
-                                        setState(() {});
-                                      },
-                                      onLongPress: () {},
-                                      child: Row(
-                                        children: [
-                                          FileIconWidget(
-                                              fileName: dirList[index]),
-                                          const SizedBox(width: 10),
-                                          FileNameWidget(
-                                            isSelecting: false,
-                                            fileName:
-                                                dirList[index].split('/').last,
-                                          ),
-                                          const SizedBox(width: 10),
-                                          SelectIconWidget(
-                                            // isSelecting: false,
-                                            fileName: dirList[index],
-                                          ),
-                                        ],
-                                      ),
-                                    ),
+                                  return ListTile(
+                                    onTap: () {
+                                      dirPath = dirList[index];
+                                      getDirList();
+                                      setState(() {});
+                                    },
+                                    leading: FileIconWidget(
+                                        fileName: dirList[index]),
+                                    title: Text(dirList[index].split('/').last),
                                   );
                                 },
                               )
                             : const Center(
                                 child: Text('No Child Directory'),
-                              )),
-                      )
+                              ),
+                      ),
                     ],
                   )
 //  =========================================== Storage List ===========================================
@@ -224,7 +209,7 @@ class _PastePageState extends State<PastePage> {
               bottom: 35,
               width: MediaQuery.of(context).size.width,
               child: Obx(() => Center(
-                    child: c.isTransfering.value != 0
+                    child: c.isTransfering.value != 0 && dirPath.length > 3
                         ? PlainTextButton(
                             onPressed: () => pasteCopiedFiles(),
                             text: "Paste Here",

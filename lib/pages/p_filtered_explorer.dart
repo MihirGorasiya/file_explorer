@@ -6,7 +6,6 @@ import 'package:get/get.dart';
 
 import '../statecontrol/controller.dart';
 import '../widgets/explorer/w_file_icon.dart';
-import '../widgets/explorer/w_file_name_widget.dart';
 import '../widgets/explorer/w_file_not_found_icon.dart';
 
 class FilteredExplorerPage extends StatefulWidget {

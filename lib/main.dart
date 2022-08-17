@@ -13,6 +13,7 @@ import 'statecontrol/controller.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  // ignore: unused_local_variable
   final Controller c = Get.put(Controller());
   await PurchaseApi().init();
 

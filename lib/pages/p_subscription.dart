@@ -38,9 +38,6 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
       appBar: AppBar(
         title: Text('IAP Test'),
       ),
-      floatingActionButton: FloatingActionButton(onPressed: () {
-        PurchaseApi().updateCustomerStatus();
-      }),
       body: products.isNotEmpty
           ? ListView.builder(
               itemCount: products.length,

@@ -53,4 +53,18 @@ class FuctionStorage {
     //--
     return Future.value(files);
   }
+
+  void removePrivateFilesForNonPremium() async {
+    List<String> fileList = await getPrivateFiles();
+    if (fileList.isNotEmpty) {
+      for (var i = 0; i < fileList.length; i++) {
+        List<String> splits = fileList[i].split('.');
+        splits.removeLast();
+        String fileName = splits.join('.');
+        File(fileList[i]).rename(fileName);
+      }
+    } else {
+      return;
+    }
+  }
 }

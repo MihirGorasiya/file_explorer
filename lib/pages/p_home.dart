@@ -3,12 +3,6 @@
 import 'dart:io';
 
 import 'package:disk_space/disk_space.dart';
-import 'package:file_manager/pages/p_explorer.dart';
-import 'package:file_manager/pages/p_filtered_explorer.dart';
-import 'package:file_manager/pages/p_search.dart';
-import 'package:file_manager/pages/p_setting.dart';
-import 'package:file_manager/pages/p_whatsapp.dart';
-import 'package:file_manager/widgets/w_storage_info_banner.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -16,9 +10,16 @@ import 'package:local_auth/local_auth.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 
+import '../utils/fuction_storage.dart';
+import '../widgets/w_storage_info_banner.dart';
 import '../statecontrol/controller.dart';
 import '../widgets/w_button_with_image.dart';
 import '../widgets/w_storage_list_tile.dart';
+import 'p_explorer.dart';
+import 'p_filtered_explorer.dart';
+import 'p_search.dart';
+import 'p_setting.dart';
+import 'p_whatsapp.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -74,6 +75,8 @@ class _HomePageState extends State<HomePage> {
           ((await DiskSpace.getFreeDiskSpaceForPath(c.sdPath))! / 1000)
               .ceilToDouble();
     }
+
+    FuctionStorage().removePrivateFilesForNonPremium();
 
     setState(() {});
   }

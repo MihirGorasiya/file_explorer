@@ -7,16 +7,18 @@ class PremiumStarWidget extends StatelessWidget {
   const PremiumStarWidget({
     Key? key,
     required this.c,
+    required this.size,
   }) : super(key: key);
 
   final Controller c;
+  final double size;
 
   @override
   Widget build(BuildContext context) {
     return Obx(
       () => Icon(
         Icons.star_rate_rounded,
-        size: 25,
+        size: size,
         color: c.themeColors[c.themeColorIndex.value],
       ),
     );

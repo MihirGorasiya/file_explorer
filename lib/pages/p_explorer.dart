@@ -46,7 +46,6 @@ class _ExplorerPageState extends State<ExplorerPage> {
       childfileList.clear();
     });
 
-    print(childDirList.length);
     c.statusString.value = 'Searching For Files';
     List<String> tempList;
 
@@ -100,7 +99,6 @@ class _ExplorerPageState extends State<ExplorerPage> {
       childDirList.add(childfileList[i]);
     }
 
-    print(childDirList.length);
     setState(() {});
     c.statusString.value = 'No File Found !';
   }

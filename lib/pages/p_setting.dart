@@ -69,7 +69,7 @@ class _SettingPageState extends State<SettingPage> {
                       SizedBox(
                         width: 20,
                       ),
-                      PremiumStarWidget(c: c),
+                      PremiumStarWidget(c: c, size: 25),
                     ],
                   ),
                   onTap: () async {
@@ -102,7 +102,7 @@ class _SettingPageState extends State<SettingPage> {
                       SizedBox(
                         width: 20,
                       ),
-                      PremiumStarWidget(c: c),
+                      PremiumStarWidget(c: c, size: 25),
                     ],
                   ),
                   onTap: () => c.goToPage(context, SubscriptionPage()),
@@ -116,7 +116,7 @@ class _SettingPageState extends State<SettingPage> {
                       SizedBox(
                         width: 20,
                       ),
-                      PremiumStarWidget(c: c),
+                      PremiumStarWidget(c: c, size: 25),
                     ],
                   ),
                   children: [
